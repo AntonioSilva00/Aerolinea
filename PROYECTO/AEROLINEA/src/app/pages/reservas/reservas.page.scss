@@ -1,0 +1,221 @@
+.reservas-bg {
+  --background: #f1f5f9; /* Fondo gris claro elegante */
+}
+
+.reservas-toolbar {
+  --background: #0f172a;
+  --color: #ffffff;
+  padding: 4px 8px;
+
+  .toolbar-title-container {
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    
+    ion-icon {
+      color: #38bdf8;
+      font-size: 1.3rem;
+    }
+  }
+
+  .logout-btn {
+    --color: #cbd5e1;
+    font-weight: 600;
+    font-size: 0.9rem;
+    
+    &:hover {
+      --color: #ffffff;
+    }
+  }
+}
+
+.dashboard-header {
+  margin-top: 8px;
+  
+  h2 {
+    font-weight: 800;
+    font-size: 1.6rem;
+    color: #0f172a;
+    margin-bottom: 4px;
+    letter-spacing: -0.5px;
+  }
+  
+  p {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin: 0;
+  }
+}
+
+/* Tarjetas de Vuelo Estilizadas */
+.flight-card {
+  margin: 0 0 16px 0;
+  border-radius: 16px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+  background: #ffffff;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+
+  .card-accent-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #0284c7, #38bdf8);
+  }
+
+  ion-card-header {
+    padding-bottom: 8px;
+  }
+}
+
+.flight-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.flight-badge {
+  background: #e0f2fe;
+  color: #0369a1;
+  font-weight: 700;
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+}
+
+.flight-date {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #64748b;
+  font-size: 0.85rem;
+  font-weight: 500;
+  
+  ion-icon {
+    font-size: 1rem;
+    color: #0284c7;
+  }
+}
+
+/* Contenedor del Trayecto (Origen y Destino) */
+.route-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f8fafc;
+  padding: 14px;
+  border-radius: 12px;
+  margin: 12px 0;
+  border: 1px solid #f1f5f9;
+
+  .route-point {
+    flex: 1;
+    
+    .route-label {
+      display: block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: #94a3b8;
+      letter-spacing: 0.8px;
+      margin-bottom: 2px;
+    }
+    
+    .route-city {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #1e293b;
+      line-height: 1.2;
+    }
+  }
+
+  .route-middle {
+    display: flex;
+    align-items: center;
+    width: 80px;
+    justify-content: center;
+    
+    .plane-line {
+      flex: 1;
+      height: 1px;
+      background: #cbd5e1;
+    }
+
+    .route-plane-icon {
+      color: #0284c7;
+      font-size: 1.1rem;
+      margin: 0 6px;
+      transform: rotate(90deg);
+    }
+  }
+}
+
+/* Sección Inferior de la Tarjeta (Precio y Botón) */
+.card-footer-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #f1f5f9;
+
+  .price-box {
+    .price-label {
+      display: block;
+      font-size: 0.7rem;
+      color: #64748b;
+      font-weight: 500;
+    }
+    
+    .price-value {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .seats-info {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.75rem;
+      color: #64748b;
+      margin-top: 2px;
+      
+      ion-icon {
+        font-size: 0.85rem;
+        color: #0284c7;
+      }
+    }
+  }
+
+  .reserve-btn {
+    --background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+    font-weight: 700;
+    font-size: 0.85rem;
+    height: 38px;
+    box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3);
+    text-transform: none;
+    letter-spacing: 0.3px;
+  }
+}
+
+/* Contenedor de Carga */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+  
+  p {
+    margin-top: 12px;
+    color: #64748b;
+    font-weight: 500;
+  }
+}

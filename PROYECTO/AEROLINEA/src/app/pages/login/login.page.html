@@ -1,0 +1,47 @@
+<ion-content class="auth-bg ion-padding">
+  <div class="auth-container">
+    <ion-card class="auth-card">
+      <ion-card-header class="ion-text-center">
+  <ion-icon name="airplane" class="brand-icon"></ion-icon>
+  <ion-card-title>SkyFlow Airways</ion-card-title>
+  <p class="brand-subtitle">Inicia sesión para gestionar tus vuelos</p>
+</ion-card-header>
+
+      <ion-card-content>
+        <form (ngSubmit)="onLogin()">
+          <ion-item class="ion-margin-bottom" lines="full">
+            <ion-input 
+              type="email" 
+              label="Correo Electrónico" 
+              labelPlacement="floating" 
+              [(ngModel)]="email" 
+              name="email" 
+              required>
+            </ion-input>
+          </ion-item>
+
+          <ion-item class="ion-margin-bottom" lines="full">
+            <ion-input 
+              type="password" 
+              label="Contraseña" 
+              labelPlacement="floating" 
+              [(ngModel)]="password" 
+              name="password" 
+              required>
+            </ion-input>
+          </ion-item>
+
+          <ion-button expand="block" type="submit" [disabled]="cargando" class="ion-margin-top">
+            {{ cargando ? 'Verificando...' : 'Entrar' }}
+          </ion-button>
+        </form>
+
+        <div class="ion-text-center ion-margin-top">
+          <ion-text color="medium">
+            <p>¿No tienes una cuenta? <a routerLink="/register">Regístrate aquí</a></p>
+          </ion-text>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

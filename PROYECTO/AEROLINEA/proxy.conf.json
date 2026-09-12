@@ -1,0 +1,8 @@
+{
+  "/api_aerolinea": {
+    "target": "http://localhost",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}

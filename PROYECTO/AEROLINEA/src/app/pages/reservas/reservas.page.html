@@ -1,0 +1,153 @@
+<ion-header>
+  <ion-toolbar color="primary">
+
+    <ion-title>
+      SkyFlow Airways
+    </ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="cerrarSesion()">
+        Salir
+      </ion-button>
+    </ion-buttons>
+
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content class="ion-padding">
+
+  <!-- ENCABEZADO -->
+  <div class="reservas-header">
+
+    <h1>
+      Vuelos disponibles
+    </h1>
+
+    <p>
+      Selecciona tu próximo destino
+    </p>
+
+  </div>
+
+
+  <!-- CARGANDO -->
+  <div
+    *ngIf="vuelos.length === 0"
+    class="loading-container">
+
+    <ion-spinner
+      name="crescent">
+    </ion-spinner>
+
+    <p>
+      Buscando itinerarios...
+    </p>
+
+  </div>
+
+
+  <!-- LISTA DE VUELOS -->
+  <ion-list
+    *ngIf="vuelos.length > 0">
+
+    <ion-card
+      *ngFor="let vuelo of vuelos"
+      class="vuelo-card">
+
+      <!-- CABECERA DEL VUELO -->
+      <ion-card-header>
+
+        <ion-card-subtitle>
+          {{ vuelo.fecha_salida | date:'medium' }}
+        </ion-card-subtitle>
+
+        <ion-card-title>
+          Vuelo {{ vuelo.numero_vuelo }}
+        </ion-card-title>
+
+      </ion-card-header>
+
+
+      <!-- INFORMACIÓN -->
+      <ion-card-content>
+
+        <ion-row>
+
+          <!-- ORIGEN -->
+          <ion-col size="5">
+
+            <strong>
+              Origen
+            </strong>
+
+            <br>
+
+            {{ vuelo.origen }}
+
+          </ion-col>
+
+
+          <!-- AVIÓN -->
+          <ion-col
+            size="2"
+            class="ion-text-center">
+
+            ✈️
+
+          </ion-col>
+
+
+          <!-- DESTINO -->
+          <ion-col size="5">
+
+            <strong>
+              Destino
+            </strong>
+
+            <br>
+
+            {{ vuelo.destino }}
+
+          </ion-col>
+
+        </ion-row>
+
+
+        <!-- PRECIO Y ASIENTOS -->
+        <ion-item
+          lines="none"
+          class="ion-margin-top">
+
+          <ion-label>
+
+            <h2>
+              Precio: ${{ vuelo.precio }}
+            </h2>
+
+            <p>
+              Lugares disponibles:
+              {{ vuelo.asientos_disponibles }}
+            </p>
+
+          </ion-label>
+
+
+          <!-- BOTÓN RESERVAR -->
+          <ion-button
+            slot="end"
+            (click)="reservar(vuelo.id)">
+
+            Reservar
+
+          </ion-button>
+
+        </ion-item>
+
+      </ion-card-content>
+
+    </ion-card>
+
+  </ion-list>
+
+</ion-content>

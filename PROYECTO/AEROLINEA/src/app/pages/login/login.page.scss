@@ -1,0 +1,97 @@
+/* Fondo degradado inspirado en el cielo durante el atardecer o la altitud */
+.auth-bg {
+  --background: linear-gradient(135deg, #0f172a 0%, #0369a1 50%, #0284c7 100%);
+}
+
+.auth-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 16px;
+}
+
+/* Efecto de tarjeta elevada moderna con bordes suaves */
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+  padding: 24px 12px;
+}
+
+ion-card-header {
+  padding-bottom: 8px;
+}
+
+.brand-icon {
+  font-size: 40px;
+  color: #0284c7;
+  margin-bottom: 4px;
+}
+
+ion-card-title {
+  font-weight: 800;
+  font-size: 2rem;
+  color: #0f172a;
+  letter-spacing: -0.5px;
+}
+
+.brand-subtitle {
+  color: #64748b;
+  font-size: 0.95rem;
+  margin-top: 4px;
+}
+
+/* Campos de entrada estilizados */
+ion-item {
+  --background: #f8fafc;
+  --border-radius: 12px;
+  --highlight-color-focused: #0284c7;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  overflow: hidden;
+  
+  ion-input {
+    --padding-start: 12px;
+    --padding-end: 12px;
+    font-size: 0.95rem;
+    
+    /* Agrega estas dos líneas para cambiar el color del texto y del placeholder */
+    --color: #0f172a !important;          /* Color de las letras al escribir */
+    --placeholder-color: #94a3b8 !important; /* Color del texto guía */
+  }
+}
+
+/* Botón de acción principal con efecto visual */
+ion-button[type="submit"] {
+  --background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  --border-radius: 12px;
+  font-weight: 700;
+  font-size: 1rem;
+  height: 48px;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.4);
+  text-transform: none;
+  letter-spacing: 0.3px;
+}
+
+/* Enlaces de texto inferior */
+.footer-text {
+  font-size: 0.9rem;
+  color: #64748b;
+  
+  a {
+    color: #0284c7;
+    text-decoration: none;
+    font-weight: 700;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: #0369a1;
+      text-decoration: underline;
+    }
+  }
+}
