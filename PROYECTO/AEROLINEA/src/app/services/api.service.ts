@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import axios, { AxiosInstance } from 'axios';
 import { Vuelo, Reserva } from '../interfaces/aerolinea.models';
-
+import { Capacitor } from '@capacitor/core';
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
   private api: AxiosInstance;
-  
+
   constructor() {
     this.api = axios.create({
-      baseURL: 'http://localhost/api_aerolinea', // Sin diagonal al final y sin espacios
+      baseURL: this.getDynamicBaseUrl(),
       headers: { 'Content-Type': 'application/json' }
     });
 
@@ -22,6 +22,19 @@ export class ApiService {
       return config;
     });
   }
+
+private getDynamicBaseUrl(): string {
+  const host = Capacitor.isNativePlatform()
+    ? '192.168.1.9'
+    : window.location.hostname;
+
+  const url = `http://${host}/api_aerolinea/`;
+
+  console.log('[API] Plataforma:', Capacitor.getPlatform());
+  console.log('[API] URL:', url);
+
+  return url;
+}
 
   // Las rutas deben empezar SIN diagonal para que tomen correctamente el baseURL
   async register(data: { nombre: string; email: string; password: string }) {

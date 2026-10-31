@@ -1,0 +1,21 @@
+# Dependencias
+node_modules/
+
+# Archivos generados por Angular
+www/
+dist/
+.angular/
+
+# Compilaciones Android
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+
+# Archivos temporales
+*.log
+.DS_Store
+
+# Variables de entorno
+.env
+.env.local

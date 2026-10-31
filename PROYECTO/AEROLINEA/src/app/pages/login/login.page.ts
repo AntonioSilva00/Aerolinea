@@ -1,12 +1,26 @@
+
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ApiService } from '../../services/api.service';
-import { 
-  ToastController, IonContent, IonCard, IonCardHeader, 
-  IonCardTitle, IonCardContent, IonItem, IonInput, IonButton, 
-  IonText, IonIcon, IonHeader, IonToolbar, IonTitle 
+import axios from 'axios';
+
+import {
+  ToastController,
+  IonContent,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent,
+  IonItem,
+  IonInput,
+  IonButton,
+  IonText,
+  IonIcon,
+  IonHeader,
+  IonToolbar,
+  IonTitle
 } from '@ionic/angular';
 
 @Component({
@@ -15,13 +29,26 @@ import {
   styleUrls: ['./login.page.scss'],
   standalone: true,
   imports: [
-    CommonModule, FormsModule, RouterLink, IonContent, IonCard, 
-    IonCardHeader, IonCardTitle, IonCardContent, IonItem, 
-    IonInput, IonButton, IonText, IonIcon, IonHeader, 
-    IonToolbar, IonTitle
+    CommonModule,
+    FormsModule,
+    RouterLink,
+    IonContent,
+    IonCard,
+    IonCardHeader,
+    IonCardTitle,
+    IonCardContent,
+    IonItem,
+    IonInput,
+    IonButton,
+    IonText,
+    IonIcon,
+    IonHeader,
+    IonToolbar,
+    IonTitle
   ]
 })
 export class LoginPage {
+
   email: string = '';
   password: string = '';
   cargando: boolean = false;
@@ -32,34 +59,130 @@ export class LoginPage {
     private toastCtrl: ToastController
   ) {}
 
-  async onLogin() {
-    if (!this.email || !this.password) {
-      this.mostrarMensaje('Completa todos los campos');
+  async onLogin(): Promise<void> {
+
+    if (this.cargando) {
       return;
     }
-    
+
+    const correo = this.email.trim();
+
+    if (!correo || !this.password.trim()) {
+      await this.mostrarMensaje('Completa todos los campos');
+      return;
+    }
+
     this.cargando = true;
+
     try {
-      const response = await this.apiService.login(this.email, this.password);
+
+      console.log('[LOGIN] Iniciando solicitud al servidor');
+
+      const response = await this.apiService.login(
+        correo,
+        this.password
+      );
+
+      console.log('[LOGIN] Respuesta recibida:', response);
+
       if (response.success) {
-        this.router.navigate(['/reservas']);
+
+        if (response.usuario) {
+          localStorage.setItem(
+            'usuario',
+            JSON.stringify(response.usuario)
+          );
+        }
+
+        await this.mostrarMensaje(
+          '¡Bienvenido!',
+          'success'
+        );
+
+        await this.router.navigate(['/reservas']);
+
       } else {
-        this.mostrarMensaje(response.message || 'Credenciales incorrectas');
+
+        await this.mostrarMensaje(
+          response.message || 'Credenciales incorrectas'
+        );
+
       }
-    } catch (error) {
-      this.mostrarMensaje('Error de conexión con el servidor');
+
+    } catch (error: unknown) {
+
+      console.error('[LOGIN] Error completo:', error);
+
+      let mensaje = 'No se pudo conectar con el servidor';
+
+      if (axios.isAxiosError(error)) {
+
+        console.error('[LOGIN] Código Axios:', error.code);
+        console.error('[LOGIN] Mensaje:', error.message);
+        console.error('[LOGIN] URL base:', error.config?.baseURL);
+        console.error('[LOGIN] Ruta:', error.config?.url);
+        console.error('[LOGIN] Estado HTTP:', error.response?.status);
+
+        const estado = error.response?.status;
+        const mensajeServidor = error.response?.data?.message;
+
+        if (estado === 401) {
+
+          mensaje = mensajeServidor ||
+            'Correo o contraseña incorrectos';
+
+        } else if (estado === 404) {
+
+          mensaje = 'No se encontró el archivo login.php';
+
+        } else if (estado && estado >= 500) {
+
+          mensaje = mensajeServidor ||
+            'Error interno del servidor PHP';
+
+        } else if (error.code === 'ECONNABORTED') {
+
+          mensaje = 'El servidor tardó demasiado en responder';
+
+        } else if (error.code === 'ERR_NETWORK') {
+
+          mensaje = 'Error de red: revisa la IP, HTTP y permisos de Android';
+
+        } else {
+
+          mensaje = mensajeServidor ||
+            error.message ||
+            mensaje;
+
+        }
+
+      } else if (error instanceof Error) {
+
+        mensaje = error.message;
+
+      }
+
+      await this.mostrarMensaje(mensaje);
+
     } finally {
+
       this.cargando = false;
+
     }
   }
 
-  async mostrarMensaje(mensaje: string) {
+  async mostrarMensaje(
+    mensaje: string,
+    color: 'success' | 'danger' = 'danger'
+  ): Promise<void> {
+
     const toast = await this.toastCtrl.create({
       message: mensaje,
       duration: 3000,
       position: 'bottom',
-      color: 'danger'
+      color
     });
-    toast.present();
+
+    await toast.present();
   }
 }
