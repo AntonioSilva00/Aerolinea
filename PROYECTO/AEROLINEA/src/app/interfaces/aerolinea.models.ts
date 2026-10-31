@@ -4,15 +4,19 @@ export interface Usuario {
   email: string;
 }
 
+
 export interface Vuelo {
   id: number;
-  numero_vuelo: string;
   origen: string;
   destino: string;
   fecha_salida: string;
+  fecha_llegada: string;
   precio: number;
-  asientos_disponibles: number;
+  capacidad: number;
+  estado: 'disponible' | 'cancelado' | 'finalizado';
+  fecha_creacion?: string;
 }
+
 
 export interface Reserva {
   vuelo_id: number;

@@ -1,5 +1,8 @@
+declare const beforeEach: (fn: () => void | Promise<void>) => void;
+declare const describe: (name: string, fn: () => void) => void;
+declare const it: (name: string, fn?: () => void | Promise<void>) => void;
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReservasPage } from './reservas.page';
+import { expect, ReservasPage } from './reservas.page';
 
 describe('ReservasPage', () => {
   let component: ReservasPage;

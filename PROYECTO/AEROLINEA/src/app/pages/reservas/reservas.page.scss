@@ -1,221 +1,750 @@
-.reservas-bg {
-  --background: #f1f5f9; /* Fondo gris claro elegante */
+
+:host {
+  --sky-navy: #102b58;
+  --sky-blue: #2563eb;
+  --sky-light: #eff6ff;
+  --sky-bg: #f3f6fb;
+  --sky-text: #162b4d;
+  --sky-muted: #7a8ba5;
+
+  display: block;
+  height: 100%;
 }
 
-.reservas-toolbar {
-  --background: #0f172a;
+.topbar {
+  --background: #102b58;
   --color: #ffffff;
-  padding: 4px 8px;
+  --min-height: 70px;
+  --padding-start: 18px;
+  --padding-end: 18px;
+}
 
-  .toolbar-title-container {
-    display: flex;
-    align-items: center;
-    font-weight: 700;
-    font-size: 1.1rem;
-    
-    ion-icon {
-      color: #38bdf8;
-      font-size: 1.3rem;
-    }
-  }
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-left: 8px;
+}
 
-  .logout-btn {
-    --color: #cbd5e1;
-    font-weight: 600;
-    font-size: 0.9rem;
-    
-    &:hover {
-      --color: #ffffff;
-    }
+.brand-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.15);
+  display: grid;
+  place-items: center;
+
+  ion-icon {
+    color: #ffffff;
+    font-size: 23px;
+    transform: rotate(-35deg);
   }
 }
 
-.dashboard-header {
-  margin-top: 8px;
-  
-  h2 {
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+
+  strong {
+    font-size: 19px;
     font-weight: 800;
-    font-size: 1.6rem;
-    color: #0f172a;
-    margin-bottom: 4px;
+    color: #ffffff;
     letter-spacing: -0.5px;
   }
-  
+
+  small {
+    color: #c5d7f7;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    margin-top: 4px;
+  }
+}
+
+.logout-btn {
+  --color: #ffffff;
+  --background: rgba(255, 255, 255, 0.1);
+  --border-radius: 12px;
+
+  ion-icon {
+    font-size: 21px;
+  }
+}
+
+.flights-content {
+  --background: #f3f6fb;
+}
+
+.hero {
+  background: linear-gradient(
+    120deg,
+    #102b58 0%,
+    #164486 55%,
+    #2563eb 100%
+  );
+  padding: 50px 22px 75px;
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: "";
+    position: absolute;
+    width: 350px;
+    height: 350px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    right: -140px;
+    top: -180px;
+    pointer-events: none;
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 50%;
+    left: -130px;
+    bottom: -140px;
+    pointer-events: none;
+  }
+}
+
+.hero-inner {
+  max-width: 1150px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+
+  h1 {
+    color: #ffffff;
+    font-size: clamp(29px, 4vw, 46px);
+    line-height: 1.15;
+    letter-spacing: -1.4px;
+    font-weight: 800;
+    margin: 16px 0;
+
+    span {
+      color: #a8d4ff;
+    }
+  }
+
+  > p {
+    color: #d1e1f8;
+    font-size: 15px;
+    line-height: 1.6;
+    max-width: 480px;
+    margin: 0 0 28px;
+  }
+}
+
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #e5efff;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 100px;
+  padding: 8px 13px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+
+  ion-icon {
+    font-size: 15px;
+  }
+}
+
+.search-box {
+  max-width: 650px;
+  min-height: 60px;
+  background: #ffffff;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 18px;
+  box-shadow: 0 12px 30px rgba(5, 20, 55, 0.16);
+
+  > ion-icon {
+    color: #2563eb;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #162b4d;
+    font-size: 14px;
+    font-family: inherit;
+
+    &::placeholder {
+      color: #9aa9bc;
+    }
+  }
+}
+
+.clear-search {
+  border: none;
+  background: #edf2f8;
+  color: #64748b;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.flights-container {
+  max-width: 1190px;
+  padding: 0 22px 55px;
+  margin: -26px auto 0;
+  position: relative;
+  z-index: 2;
+}
+
+.results-heading {
+  background: #ffffff;
+  padding: 25px 28px;
+  border-radius: 18px;
+  box-shadow: 0 5px 24px rgba(16, 43, 88, 0.06);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 25px;
+
+  h2 {
+    color: #162b4d;
+    font-size: 23px;
+    font-weight: 800;
+    margin: 5px 0 7px;
+    letter-spacing: -0.5px;
+  }
+
   p {
-    color: #64748b;
-    font-size: 0.95rem;
+    color: #7a8ba5;
+    font-size: 13px;
     margin: 0;
   }
 }
 
-/* Tarjetas de Vuelo Estilizadas */
-.flight-card {
-  margin: 0 0 16px 0;
-  border-radius: 16px;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
-  background: #ffffff;
-  position: relative;
-  overflow: hidden;
+.eyebrow {
+  color: #2563eb;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.results-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.results-count {
+  color: #2563eb;
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
+  border-radius: 100px;
+  padding: 9px 14px;
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.refresh-button {
   border: 1px solid #e2e8f0;
+  border-radius: 11px;
+  background: #ffffff;
+  color: #2563eb;
+  width: 39px;
+  height: 39px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
 
-  .card-accent-bar {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #0284c7, #38bdf8);
-  }
-
-  ion-card-header {
-    padding-bottom: 8px;
-  }
-}
-
-.flight-top-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.flight-badge {
-  background: #e0f2fe;
-  color: #0369a1;
-  font-weight: 700;
-  font-size: 0.75rem;
-  padding: 4px 10px;
-  border-radius: 20px;
-  letter-spacing: 0.5px;
-}
-
-.flight-date {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  color: #64748b;
-  font-size: 0.85rem;
-  font-weight: 500;
-  
   ion-icon {
-    font-size: 1rem;
-    color: #0284c7;
+    font-size: 19px;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 }
 
-/* Contenedor del Trayecto (Origen y Destino) */
-.route-container {
+.flights-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.flight-card {
+  background: #ffffff;
+  border: 1px solid #e7edf5;
+  border-radius: 20px;
+  box-shadow: 0 5px 24px rgba(16, 43, 88, 0.045);
+  overflow: hidden;
+  min-width: 0;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(16, 43, 88, 0.11);
+  }
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 21px 22px;
+  border-bottom: 1px solid #edf1f6;
+}
+
+.flight-number {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  background: #f8fafc;
-  padding: 14px;
-  border-radius: 12px;
-  margin: 12px 0;
-  border: 1px solid #f1f5f9;
+  gap: 11px;
+  min-width: 0;
 
-  .route-point {
-    flex: 1;
-    
-    .route-label {
-      display: block;
-      font-size: 0.65rem;
-      font-weight: 700;
-      color: #94a3b8;
-      letter-spacing: 0.8px;
-      margin-bottom: 2px;
-    }
-    
-    .route-city {
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: #1e293b;
-      line-height: 1.2;
-    }
-  }
-
-  .route-middle {
+  > div:last-child {
     display: flex;
-    align-items: center;
-    width: 80px;
-    justify-content: center;
-    
-    .plane-line {
-      flex: 1;
-      height: 1px;
-      background: #cbd5e1;
-    }
+    flex-direction: column;
+    gap: 4px;
+  }
 
-    .route-plane-icon {
-      color: #0284c7;
-      font-size: 1.1rem;
-      margin: 0 6px;
-      transform: rotate(90deg);
-    }
+  small {
+    color: #8b9bb0;
+    font-size: 9px;
+    letter-spacing: 1.1px;
+    font-weight: 800;
+  }
+
+  strong {
+    color: #162b4d;
+    font-size: 14px;
+    font-weight: 800;
   }
 }
 
-/* Sección Inferior de la Tarjeta (Precio y Botón) */
-.card-footer-section {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid #f1f5f9;
+.flight-symbol {
+  display: grid;
+  place-items: center;
+  width: 39px;
+  height: 39px;
+  flex-shrink: 0;
+  background: #eff6ff;
+  border-radius: 12px;
+  color: #2563eb;
 
-  .price-box {
-    .price-label {
-      display: block;
-      font-size: 0.7rem;
-      color: #64748b;
-      font-weight: 500;
-    }
-    
-    .price-value {
-      font-size: 1.3rem;
-      font-weight: 800;
-      color: #0f172a;
-    }
-
-    .seats-info {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 0.75rem;
-      color: #64748b;
-      margin-top: 2px;
-      
-      ion-icon {
-        font-size: 0.85rem;
-        color: #0284c7;
-      }
-    }
-  }
-
-  .reserve-btn {
-    --background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
-    font-weight: 700;
-    font-size: 0.85rem;
-    height: 38px;
-    box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3);
-    text-transform: none;
-    letter-spacing: 0.3px;
+  ion-icon {
+    font-size: 20px;
   }
 }
 
-/* Contenedor de Carga */
-.loading-container {
-  display: flex;
-  flex-direction: column;
+.status-pill {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  height: 60vh;
-  
-  p {
-    margin-top: 12px;
+  gap: 6px;
+  border-radius: 100px;
+  background: #ecfdf5;
+  color: #059669;
+  padding: 7px 10px;
+  font-size: 10px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.status-cancelled {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.status-finished {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.flight-route {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 76px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  padding: 30px 22px 25px;
+}
+
+.city {
+  min-width: 0;
+
+  h3 {
+    color: #162b4d;
+    font-size: clamp(15px, 1.8vw, 20px);
+    font-weight: 800;
+    line-height: 1.25;
+    margin: 9px 0 6px;
+    overflow-wrap: anywhere;
+  }
+
+  small {
+    color: #8b9bb0;
+    font-size: 11px;
+  }
+}
+
+.city-label {
+  color: #8b9bb0;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.city-destination {
+  text-align: right;
+}
+
+.route-middle {
+  text-align: center;
+  color: #2563eb;
+
+  > ion-icon {
+    font-size: 21px;
+    transform: rotate(45deg);
+  }
+
+  > small {
+    color: #9aa9bc;
+    font-size: 10px;
+  }
+}
+
+.route-line {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  margin: 8px 0;
+
+  span {
+    width: 6px;
+    height: 6px;
+    border: 1.5px solid #2563eb;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .dash {
+    flex: 1;
+    min-width: 0;
+    border-top: 1.5px dashed #b6c9e7;
+  }
+}
+
+.flight-details {
+  margin: 0 22px;
+  background: #f7f9fc;
+  border: 1px solid #edf1f7;
+  border-radius: 13px;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.detail-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  min-width: 0;
+
+  > div:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+  }
+
+  small {
+    color: #8b9bb0;
+    font-size: 10px;
+  }
+
+  strong {
+    color: #253b5c;
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  span {
     color: #64748b;
-    font-weight: 500;
+    font-size: 11px;
+  }
+}
+
+.detail-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  background: #e7efff;
+  color: #2563eb;
+  flex-shrink: 0;
+
+  ion-icon {
+    font-size: 16px;
+  }
+}
+
+.card-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 23px 22px;
+}
+
+.price-block {
+  min-width: 0;
+
+  > small {
+    color: #8b9bb0;
+    font-size: 11px;
+  }
+}
+
+.price {
+  color: #102b58;
+  font-size: 25px;
+  font-weight: 900;
+  letter-spacing: -0.8px;
+  margin: 5px 0;
+
+  span {
+    color: #8b9bb0;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+}
+
+.capacity {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #8b9bb0;
+  font-size: 10px;
+
+  ion-icon {
+    font-size: 13px;
+  }
+}
+
+.book-button {
+  --background: #2563eb;
+  --background-hover: #1d4ed8;
+  --background-activated: #1d4ed8;
+  --color: #ffffff;
+  --border-radius: 11px;
+  --box-shadow: 0 5px 14px rgba(37, 99, 235, 0.2);
+
+  height: 43px;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: none;
+  letter-spacing: 0;
+  flex-shrink: 0;
+
+  ion-icon {
+    font-size: 16px;
+  }
+
+  ion-spinner {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.state-box {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 65px 25px;
+  text-align: center;
+  border: 1px solid #e7edf5;
+
+  > ion-spinner {
+    width: 40px;
+    height: 40px;
+    color: #2563eb;
+  }
+
+  h3 {
+    color: #162b4d;
+    font-size: 19px;
+    font-weight: 800;
+    margin: 17px 0 8px;
+  }
+
+  p {
+    color: #8b9bb0;
+    font-size: 13px;
+  }
+
+  ion-button {
+    margin-top: 15px;
+    --border-radius: 10px;
+    text-transform: none;
+  }
+}
+
+.empty-icon {
+  width: 62px;
+  height: 62px;
+  margin: 0 auto;
+  border-radius: 18px;
+  background: #eff6ff;
+  color: #2563eb;
+  display: grid;
+  place-items: center;
+
+  ion-icon {
+    font-size: 27px;
+  }
+}
+
+/* TABLET */
+@media (max-width: 900px) {
+  .flights-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .flights-container {
+    max-width: 650px;
+  }
+}
+
+/* CELULAR */
+@media (max-width: 480px) {
+  .topbar {
+    --min-height: 62px;
+    --padding-start: 10px;
+    --padding-end: 10px;
+  }
+
+  .hero {
+    padding: 35px 18px 60px;
+  }
+
+  .hero-inner h1 {
+    font-size: 30px;
+  }
+
+  .hero-inner > p {
+    font-size: 13px;
+  }
+
+  .search-box {
+    min-height: 54px;
+    padding: 0 13px;
+
+    input {
+      font-size: 12px;
+    }
+  }
+
+  .flights-container {
+    padding: 0 13px 35px;
+  }
+
+  .results-heading {
+    padding: 20px 17px;
+    align-items: flex-start;
+
+    h2 {
+      font-size: 19px;
+    }
+
+    p {
+      font-size: 11px;
+    }
+  }
+
+  .results-actions {
+    gap: 6px;
+  }
+
+  .results-count {
+    font-size: 10px;
+    padding: 8px;
+  }
+
+  .refresh-button {
+    width: 34px;
+    height: 34px;
+  }
+
+  .flights-grid {
+    gap: 15px;
+  }
+
+  .card-top {
+    padding: 17px 15px;
+  }
+
+  .flight-route {
+    grid-template-columns: minmax(0, 1fr) 54px minmax(0, 1fr);
+    padding: 25px 15px;
+    gap: 4px;
+  }
+
+  .city h3 {
+    font-size: 15px;
+  }
+
+  .flight-details {
+    margin: 0 15px;
+    padding: 12px;
+    gap: 8px;
+  }
+
+  .detail-item {
+    gap: 6px;
+
+    strong {
+      font-size: 11px;
+    }
+  }
+
+  .detail-icon {
+    width: 26px;
+    height: 26px;
+  }
+
+  .card-bottom {
+    padding: 20px 15px;
+  }
+
+  .price {
+    font-size: 21px;
+  }
+
+  .book-button {
+    height: 40px;
   }
 }
