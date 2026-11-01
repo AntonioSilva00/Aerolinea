@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { IonContent, IonIcon } from '@ionic/angular';
 import { addIcons } from 'ionicons';
@@ -11,16 +12,52 @@ import { airplane } from 'ionicons/icons';
   standalone: true,
   imports: [IonContent, IonIcon],
 })
-export class HomePage implements OnInit {
+export class HomePage implements OnInit, OnDestroy {
+
+  private timer?: ReturnType<typeof setTimeout>;
+
   constructor(private router: Router) {
-    // En Ionic Standalone, los iconos se registran manualmente
     addIcons({ airplane });
   }
 
-  ngOnInit() {
-    // Inicia la redirección automática después de 3000 milisegundos (3 segundos)
-    setTimeout(() => {
-      this.router.navigate(['/login']);
+  ngOnInit(): void {
+    this.timer = setTimeout(() => {
+      this.verificarSesion();
     }, 3000);
+  }
+
+  ngOnDestroy(): void {
+    if (this.timer) {
+      clearTimeout(this.timer);
+    }
+  }
+
+  private verificarSesion(): void {
+    const token = localStorage.getItem('auth_token');
+    const usuarioGuardado = localStorage.getItem('usuario');
+
+    let usuarioValido = false;
+
+    try {
+      const usuario = JSON.parse(usuarioGuardado || 'null');
+      usuarioValido = !!usuario && !!usuario.id;
+    } catch {
+      usuarioValido = false;
+    }
+
+    if (token && usuarioValido) {
+      console.log('[HOME] Sesión local encontrada');
+
+      void this.router.navigateByUrl('/mis-vuelos', {
+        replaceUrl: true
+      });
+
+    } else {
+      console.log('[HOME] No existe sesión local');
+
+      void this.router.navigateByUrl('/login', {
+        replaceUrl: true
+      });
+    }
   }
 }
