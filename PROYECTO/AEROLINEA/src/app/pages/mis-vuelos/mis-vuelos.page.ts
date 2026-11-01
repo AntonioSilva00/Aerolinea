@@ -70,7 +70,11 @@ export class MisVuelosPage implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       });
     }, 30000);
-
+this.sincronizador = setInterval(() => {
+  if (navigator.onLine && !this.cargando) {
+    void this.actualizar();
+  }
+}, 60000);
     window.addEventListener('online', this.onOnline);
     document.addEventListener('visibilitychange', this.onVisible);
   }
@@ -79,11 +83,13 @@ export class MisVuelosPage implements OnInit, OnDestroy {
     if (this.timer) {
       clearInterval(this.timer);
     }
-
+if (this.sincronizador) {
+  clearInterval(this.sincronizador);
+}
     window.removeEventListener('online', this.onOnline);
     document.removeEventListener('visibilitychange', this.onVisible);
   }
-
+private sincronizador?: ReturnType<typeof setInterval>;
   private onOnline = (): void => {
     void this.actualizar();
   };
@@ -128,43 +134,45 @@ export class MisVuelosPage implements OnInit, OnDestroy {
       });
     }
   }
+private salidaEfectiva(v: Viaje): number {
+  const fecha = v.fecha_salida_estimada || v.fecha_salida;
 
-  restante(v: Viaje): string {
-    const fecha = new Date(
-      v.fecha_salida.replace(' ', 'T') + '-06:00'
-    ).getTime();
+  return new Date(
+    fecha.replace(' ', 'T') + '-06:00'
+  ).getTime();
+}
+restante(v: Viaje): string {
+  const diferencia = this.salidaEfectiva(v) - this.ahora;
 
-    const diferencia = fecha - this.ahora;
-
-    if (diferencia <= 0) {
-      return 'Salida alcanzada';
-    }
-
-    const dias = Math.floor(diferencia / 86400000);
-    const horas = Math.floor(
-      (diferencia % 86400000) / 3600000
-    );
-    const minutos = Math.floor(
-      (diferencia % 3600000) / 60000
-    );
-
-    return `${dias}d ${horas}h ${minutos}min`;
+  if (diferencia <= 0) {
+    return 'Salida alcanzada';
   }
 
-  disponible(v: Viaje): boolean {
-    const fecha = new Date(
-      v.fecha_salida.replace(' ', 'T') + '-06:00'
-    ).getTime();
+  const dias = Math.floor(diferencia / 86400000);
+  const horas = Math.floor((diferencia % 86400000) / 3600000);
+  const minutos = Math.floor((diferencia % 3600000) / 60000);
 
-    const diferencia = fecha - this.ahora;
-
-    return (
-      !this.store.offline &&
-      v.estado === 'disponible' &&
-      diferencia > 0 &&
-      diferencia <= 86400000
-    );
+  return `${dias}d ${horas}h ${minutos}min`;
+}
+disponible(v: Viaje): boolean {
+  if (this.store.offline) {
+    return false;
   }
+
+  const estado = (v.estado || '').toLowerCase();
+  const situacion = (
+    v.situacion_operativa || ''
+  ).toLowerCase();
+
+  if (
+    estado === 'cancelado' ||
+    situacion === 'cancelado'
+  ) {
+    return false;
+  }
+
+  return v.checkin_habilitado === true;
+}
 
   async checkin(v: Viaje, p: PasajeroViaje): Promise<void> {
     this.procesando = p.reserva_pasajero_id;

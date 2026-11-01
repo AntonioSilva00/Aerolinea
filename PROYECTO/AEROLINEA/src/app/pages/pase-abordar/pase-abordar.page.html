@@ -1,11 +1,229 @@
-<ion-header class="ion-no-border"><ion-toolbar class="bar"><ion-button slot="start" fill="clear" (click)="volver()"><ion-icon name="arrow-back-outline"></ion-icon></ion-button><ion-title>Pase de abordar</ion-title><ion-button slot="end" fill="clear" (click)="actualizar()" [disabled]="cargando"><ion-icon name="refresh-outline"></ion-icon></ion-button></ion-toolbar></ion-header>
-<ion-content class="screen"><main class="wrap"><div class="intro"><span>SKYFLOW AIRWAYS</span><h1>Tu pase de abordar</h1><p>Disponible incluso sin conexión después de descargarlo.</p></div>
-<div class="notice" *ngIf="store.offline"><ion-icon name="cloud-offline-outline"></ion-icon><span>Modo offline · Última sincronización: {{store.sincronizadoEn ? (store.sincronizadoEn|date:'short') : 'sin datos'}}</span></div>
-<div class="empty" *ngIf="cargando && !pasajero"><ion-spinner></ion-spinner></div>
-<div class="empty" *ngIf="!cargando && (!viaje||!pasajero)">No encontramos este pase en el dispositivo. Conéctate para descargarlo.</div>
-<div class="empty" *ngIf="pasajero && (!pasajero.pase_id || pasajero.pase_estado==='revocado')">{{pasajero.pase_estado==='revocado'?'Este pase fue revocado.':'Completa el check-in para emitir tu pase.'}}</div>
-<article class="ticket" *ngIf="viaje && pasajero && pasajero.pase_id && pasajero.pase_estado!=='revocado'"><div class="ticket-top"><div class="brand">✈ SKYFLOW <small>AIRWAYS</small></div><span class="tag">{{store.offline?'COPIA LOCAL':'PASE EMITIDO'}}</span><div class="route"><div><small>ORIGEN</small><h2>{{viaje.origen}}</h2></div><span>✈</span><div class="right"><small>DESTINO</small><h2>{{viaje.destino}}</h2></div></div></div>
-<div class="ticket-body"><p class="label">PASAJERO</p><h3>{{pasajero.nombres}} {{pasajero.apellidos}}</h3><div class="facts"><div><small>FECHA</small><strong>{{viaje.fecha_salida|date:'dd MMM yyyy'}}</strong></div><div><small>HORA</small><strong>{{viaje.fecha_salida_estimada || viaje.fecha_salida | date:'HH:mm'}}</strong></div><div><small>ASIENTO</small><strong>{{pasajero.asiento||'Pendiente'}}</strong></div><div><small>PUERTA</small><strong>{{pasajero.puerta || viaje.puerta_embarque || 'Por asignar'}}</strong></div></div>
-<div class="pet" *ngFor="let m of viaje.mascotas"><ion-icon name="paw-outline"></ion-icon><span>{{m.nombre}} · {{m.modalidad}} · {{m.estado}}</span></div></div>
-<div class="ticket-foot"><div class="qr-placeholder"><ion-icon name="qr-code-outline"></ion-icon><span>QR de demostración: requiere renderizar el payload emitido por PHP</span></div><div class="code">Código: {{pasajero.codigo_pase}}</div><small>Versión {{pasajero.version}} · Actualizado: {{pasajero.actualizado_en|date:'short'}}</small></div></article>
-<p class="disclaimer">La información guardada puede cambiar. Verifica puerta y horario al recuperar conexión. Este pase es un prototipo, no válido para abordar una aerolínea real.</p></main></ion-content>
+
+<ion-header class="ion-no-border">
+  <ion-toolbar class="ticket-toolbar">
+    <ion-button
+      slot="start"
+      fill="clear"
+      (click)="volver()"
+    >
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </ion-button>
+
+
+    <ion-button
+      slot="end"
+      fill="clear"
+      (click)="actualizar()"
+      [disabled]="cargando"
+    >
+      <ion-icon name="refresh-outline"></ion-icon>
+    </ion-button>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ticket-screen">
+
+  <div class="ticket-container">
+
+    <div class="loading-state" *ngIf="cargando">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Preparando tu pase de abordar...</p>
+    </div>
+
+    <div class="error-state" *ngIf="error && !cargando">
+      <ion-icon name="qr-code-outline"></ion-icon>
+      <h3>No se pudo cargar el pase</h3>
+      <p>{{ error }}</p>
+    </div>
+
+    <ng-container
+      *ngIf="viaje && pasajero && qrImagen && !cargando"
+    >
+
+      <div class="page-heading">
+        <span>LISTO PARA DESPEGAR</span>
+        <h1>¡Tu aventura comienza aquí!</h1>
+        <p>
+          Tu pase de abordar está preparado.
+        </p>
+      </div>
+
+      <div class="boarding-ticket">
+
+        <div class="ticket-top">
+
+          <div class="brand-row">
+            <div class="brand">
+              <div class="brand-icon">
+                <ion-icon name="airplane-outline"></ion-icon>
+              </div>
+
+              <div>
+                <strong>SKYFLOW</strong>
+                <small>AIRWAYS</small>
+              </div>
+            </div>
+
+            <span class="boarding-label">
+              BOARDING PASS
+            </span>
+          </div>
+
+          <!-- Mascota animada -->
+          <div class="pet-animation">
+            <div class="flight-trail"></div>
+
+            <div class="traveling-pet">
+              <span class="pet-emoji">🐶</span>
+              <span class="pet-shadow"></span>
+            </div>
+
+            <span class="trail-star star-one">✦</span>
+            <span class="trail-star star-two">✦</span>
+            <span class="trail-star star-three">✦</span>
+          </div>
+
+          <!-- Ruta -->
+          <div class="ticket-route">
+
+            <div class="route-city">
+              <small>DESDE</small>
+              <h2>{{ viaje.origen }}</h2>
+              <span>ORIGEN</span>
+            </div>
+
+            <div class="route-connector">
+              <span class="route-line"></span>
+              <ion-icon name="airplane-outline"></ion-icon>
+              <span class="route-line"></span>
+            </div>
+
+            <div class="route-city destination">
+              <small>HACIA</small>
+              <h2>{{ viaje.destino }}</h2>
+              <span>DESTINO</span>
+            </div>
+
+          </div>
+
+          <div class="flight-status">
+            <ion-icon name="checkmark-circle-outline"></ion-icon>
+            Pase de abordar emitido
+          </div>
+
+        </div>
+
+        <!-- Información del pasajero -->
+        <div class="ticket-details">
+
+          <div class="detail-grid">
+
+            <div class="detail-item full">
+              <small>PASAJERO</small>
+              <strong>
+                {{ pasajero.nombres }}
+                {{ pasajero.apellidos }}
+              </strong>
+            </div>
+
+            <div class="detail-item">
+              <small>FECHA DE SALIDA</small>
+              <strong>
+                {{
+                  viaje.fecha_salida_estimada ||
+                  viaje.fecha_salida
+                }}
+              </strong>
+            </div>
+
+            <div class="detail-item">
+              <small>ASIENTO</small>
+              <strong class="seat">
+                {{ pasajero.asiento || 'Pendiente' }}
+              </strong>
+            </div>
+
+            <div class="detail-item">
+              <small>PUERTA</small>
+              <strong>
+                {{ viaje.puerta_embarque || 'Por asignar' }}
+              </strong>
+            </div>
+
+            <div class="detail-item">
+              <small>RESERVA</small>
+              <strong>{{ viaje.codigo_reserva }}</strong>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Línea de perforación -->
+        <div class="ticket-divider">
+          <span class="cutout left"></span>
+          <div class="dash-line"></div>
+          <span class="cutout right"></span>
+        </div>
+
+        <!-- QR -->
+        <div class="qr-section">
+
+          <span class="qr-eyebrow">
+            TU ACCESO AL VUELO
+          </span>
+
+          <h3>Escanea y aborda</h3>
+
+          <div class="qr-frame">
+            <img
+              [src]="qrImagen"
+              alt="Código QR del pase de abordar"
+            />
+          </div>
+
+          <p>
+            Presenta este código al personal de embarque.
+          </p>
+
+          <div class="pass-id">
+            Pase #{{ pasajero.pase_id }}
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Mascota registrada -->
+      <div
+        class="pet-info"
+        *ngIf="viaje.mascotas?.length"
+      >
+        <div class="pet-info-icon">🐾</div>
+
+        <div>
+          <strong>
+            ¡Tu compañero también viaja!
+          </strong>
+          <p>
+            Mascota registrada en tu reserva.
+            Consulta su estado antes de abordar.
+          </p>
+        </div>
+      </div>
+
+      <!-- Estado offline -->
+      <div class="offline-notice" *ngIf="store.offline">
+        <ion-icon name="cloud-offline-outline"></ion-icon>
+        Pase consultado desde tu copia guardada.
+      </div>
+
+      <p class="ticket-footer">
+        SkyFlow Airways · Buen viaje
+      </p>
+
+    </ng-container>
+
+  </div>
+
+</ion-content>

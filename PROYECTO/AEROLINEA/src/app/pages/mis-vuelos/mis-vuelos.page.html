@@ -1,15 +1,293 @@
-<ion-header class="ion-no-border"><ion-toolbar class="bar"><ion-title>SkyFlow · Mis vuelos</ion-title><ion-button slot="end" fill="clear" (click)="actualizar()" [disabled]="cargando"><ion-icon name="refresh-outline"></ion-icon></ion-button></ion-toolbar></ion-header>
-<ion-content class="screen"><div class="wrap"><header class="hero"><span>MI EXPERIENCIA DE VIAJE</span><h1>Tus próximos vuelos</h1><p>Todo listo para viajar, también con tu mejor amigo.</p></header>
-<div class="notice" *ngIf="store.offline"><ion-icon name="cloud-offline-outline"></ion-icon><div><b>Información sin conexión</b><small>{{store.error}} · Última sincronización: {{store.sincronizadoEn ? (store.sincronizadoEn | date:'short') : 'sin copia previa'}}</small></div></div>
-<p class="message" *ngIf="mensaje">{{mensaje}}</p>
-<div class="loading" *ngIf="cargando && !store.viajes.length"><ion-spinner></ion-spinner><p>Consultando tus reservas...</p></div>
-<div class="loading" *ngIf="!cargando && !store.viajes.length"><h3>Aún no tienes vuelos guardados</h3><p>Realiza una reserva o conéctate para actualizar.</p></div>
-<article class="trip" *ngFor="let v of store.viajes"><div class="trip-head"><span>RESERVA {{v.codigo_reserva}}</span><span class="status" [class.late]="v.situacion_operativa==='retrasado'">{{v.estado==='cancelado'?'Cancelado':v.situacion_operativa==='retrasado'?'Retrasado':v.situacion_operativa==='abordando'?'Abordando':'En horario'}}</span></div>
-<div class="route"><div><small>ORIGEN</small><h2>{{v.origen}}</h2></div><ion-icon name="airplane-outline"></ion-icon><div class="destination"><small>DESTINO</small><h2>{{v.destino}}</h2></div></div>
-<div class="times"><div><small>Salida programada</small><strong>{{v.fecha_salida | date:'dd MMM, HH:mm'}}</strong></div><div><small>Tiempo para salir</small><strong class="blue">{{restante(v)}}</strong></div></div>
-<div class="alert" *ngIf="v.situacion_operativa==='retrasado'">Salida estimada: {{v.fecha_salida_estimada || 'Por confirmar'}}</div>
-<div class="person" *ngFor="let p of v.pasajeros"><div class="avatar"><ion-icon name="person-outline"></ion-icon></div><div class="grow"><b>{{p.nombres}} {{p.apellidos}}</b><small>{{p.tipo_pasajero | titlecase}} · Asiento {{p.asiento || 'pendiente'}}</small></div><span class="mini">{{p.checkin_estado==='completado'?'Check-in listo':'Pendiente'}}</span></div>
-<div class="person" *ngFor="let m of v.mascotas"><div class="avatar pet"><ion-icon name="paw-outline"></ion-icon></div><div class="grow"><b>{{m.nombre}} · {{m.raza || m.especie}}</b><small>Mascota en {{m.modalidad}} · {{m.estado}}</small></div></div>
-<div class="updates" *ngIf="v.actualizaciones.length"><b>Últimas actualizaciones</b><p *ngFor="let a of v.actualizaciones.slice(0,2)">{{a.descripcion || a.tipo + ': ' + a.valor_nuevo}}</p></div>
-<div class="actions" *ngFor="let p of v.pasajeros"><ion-button expand="block" *ngIf="p.pase_id && p.pase_estado!=='revocado'" (click)="abrirPase(v,p)">Ver pase de abordar <ion-icon name="chevron-forward-outline" slot="end"></ion-icon></ion-button><ion-button expand="block" *ngIf="!p.pase_id" [disabled]="!disponible(v)||procesando!==null" (click)="checkin(v,p)">{{procesando===p.reserva_pasajero_id?'Procesando...':disponible(v)?'Realizar check-in':'Check-in disponible 24 h antes'}}</ion-button></div>
-</article></div></ion-content>
+
+<ion-header class="ion-no-border">
+  <ion-toolbar class="bar">
+    <ion-title>SkyFlow · Mis vuelos</ion-title>
+
+    <ion-button
+      slot="end"
+      fill="clear"
+      (click)="actualizar()"
+      [disabled]="cargando"
+    >
+      <ion-icon name="refresh-outline"></ion-icon>
+    </ion-button>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="screen">
+  <div class="wrap">
+
+    <header class="hero">
+      <span>MI EXPERIENCIA DE VIAJE</span>
+      <h1>Tus próximos vuelos</h1>
+      <p>
+        Consulta tus vuelos, afectaciones y pases de abordar.
+      </p>
+    </header>
+
+    <!-- Información offline -->
+    <div class="notice" *ngIf="store.offline">
+      <ion-icon name="cloud-offline-outline"></ion-icon>
+
+      <div>
+        <b>Información sin conexión</b>
+
+        <small>
+          {{ store.error }}
+          · Última sincronización:
+          {{
+            store.sincronizadoEn
+              ? (store.sincronizadoEn | date:'short')
+              : 'sin copia previa'
+          }}
+        </small>
+      </div>
+    </div>
+
+    <p class="message" *ngIf="mensaje">
+      {{ mensaje }}
+    </p>
+
+    <!-- Cargando -->
+    <div
+      class="loading"
+      *ngIf="cargando && !store.viajes.length"
+    >
+      <ion-spinner></ion-spinner>
+      <p>Consultando tus reservas...</p>
+    </div>
+
+    <!-- Sin vuelos -->
+    <div
+      class="loading"
+      *ngIf="!cargando && !store.viajes.length"
+    >
+      <h3>Aún no tienes vuelos guardados</h3>
+      <p>
+        Realiza una reserva o conéctate para actualizar.
+      </p>
+    </div>
+
+    <!-- Lista de vuelos -->
+    <article
+      class="trip"
+      *ngFor="let v of store.viajes"
+    >
+
+      <!-- Encabezado -->
+      <div class="trip-head">
+        <span>
+          RESERVA {{ v.codigo_reserva }}
+        </span>
+
+        <span
+          class="status"
+          [class.late]="
+            v.situacion_operativa?.toLowerCase() === 'retrasado'
+          "
+        >
+          {{
+            v.estado?.toLowerCase() === 'cancelado'
+              ? 'Cancelado'
+              : v.situacion_operativa
+                ? (v.situacion_operativa | titlecase)
+                : 'En horario'
+          }}
+        </span>
+      </div>
+
+      <!-- Ruta -->
+      <div class="route">
+        <div>
+          <small>ORIGEN</small>
+          <h2>{{ v.origen }}</h2>
+        </div>
+
+        <ion-icon name="airplane-outline"></ion-icon>
+
+        <div class="destination">
+          <small>DESTINO</small>
+          <h2>{{ v.destino }}</h2>
+        </div>
+      </div>
+
+      <!-- Horarios -->
+      <div class="times">
+
+        <div>
+          <small>Salida programada</small>
+          <strong>
+            {{ v.fecha_salida }}
+          </strong>
+        </div>
+
+        <div>
+          <small>Tiempo para salir</small>
+          <strong class="blue">
+            {{ restante(v) }}
+          </strong>
+        </div>
+
+      </div>
+
+      <!-- Afectaciones -->
+      <div
+        class="alert"
+        *ngIf="
+          v.fecha_salida_estimada ||
+          v.situacion_operativa ||
+          v.puerta_embarque
+        "
+      >
+
+        <p *ngIf="v.fecha_salida_estimada">
+          <strong>Nueva salida estimada:</strong>
+          {{ v.fecha_salida_estimada }}
+        </p>
+
+        <p *ngIf="v.situacion_operativa">
+          <strong>Situación operativa:</strong>
+          {{ v.situacion_operativa }}
+        </p>
+
+        <p *ngIf="v.puerta_embarque">
+          <strong>Puerta de embarque:</strong>
+          {{ v.puerta_embarque }}
+        </p>
+
+      </div>
+
+      <!-- Pasajeros -->
+      <div
+        class="person"
+        *ngFor="let p of v.pasajeros"
+      >
+
+        <div class="avatar">
+          <ion-icon name="person-outline"></ion-icon>
+        </div>
+
+        <div class="grow">
+          <b>
+            {{ p.nombres }} {{ p.apellidos }}
+          </b>
+
+          <small>
+            {{ p.tipo_pasajero | titlecase }}
+            · Asiento {{ p.asiento || 'pendiente' }}
+          </small>
+        </div>
+
+        <span class="mini">
+          {{
+            p.checkin_estado === 'completado'
+              ? 'Check-in listo'
+              : 'Pendiente'
+          }}
+        </span>
+
+      </div>
+
+      <!-- Mascotas -->
+      <div
+        class="person"
+        *ngFor="let m of v.mascotas"
+      >
+
+        <div class="avatar pet">
+          <ion-icon name="paw-outline"></ion-icon>
+        </div>
+
+        <div class="grow">
+          <b>
+            {{ m.nombre }}
+            · {{ m.raza || m.especie }}
+          </b>
+
+          <small>
+            Mascota en {{ m.modalidad }}
+            · {{ m.estado }}
+          </small>
+        </div>
+
+      </div>
+
+      <!-- Actualizaciones -->
+      <div
+        class="updates"
+        *ngIf="v.actualizaciones?.length"
+      >
+
+        <b>Últimas actualizaciones</b>
+
+        <p
+          *ngFor="
+            let a of v.actualizaciones.slice(0, 2)
+          "
+        >
+          {{
+            a.descripcion ||
+            a.tipo + ': ' + a.valor_nuevo
+          }}
+        </p>
+
+      </div>
+
+      <!-- Check-in y pase de abordar -->
+      <div
+        class="actions"
+        *ngFor="let p of v.pasajeros"
+      >
+
+        <!-- Pase generado -->
+        <ion-button
+          expand="block"
+          *ngIf="
+            p.pase_id &&
+            p.pase_estado !== 'revocado'
+          "
+          (click)="abrirPase(v, p)"
+        >
+          Ver pase de abordar
+
+          <ion-icon
+            name="chevron-forward-outline"
+            slot="end"
+          ></ion-icon>
+        </ion-button>
+
+        <!-- Check-in pendiente -->
+        <ion-button
+          expand="block"
+          *ngIf="!p.pase_id"
+          [disabled]="
+            !disponible(v) ||
+            procesando !== null
+          "
+          (click)="checkin(v, p)"
+        >
+          {{
+            procesando === p.reserva_pasajero_id
+              ? 'Procesando...'
+              : disponible(v)
+                ? 'Realizar check-in'
+                : 'Check-in no disponible'
+          }}
+        </ion-button>
+
+        <small
+          *ngIf="!p.pase_id && !disponible(v)"
+        >
+          {{
+            store.offline
+              ? 'Necesitas conexión para realizar el check-in.'
+              : 'El check-in requiere un vuelo elegible dentro de las 24 horas previas.'
+          }}
+        </small>
+
+      </div>
+
+    </article>
+
+  </div>
+</ion-content>
