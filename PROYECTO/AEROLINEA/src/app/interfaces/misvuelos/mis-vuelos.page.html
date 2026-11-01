@@ -1,0 +1,14 @@
+
+<div class="countdown-card">
+  <p>Tiempo restante para tu vuelo</p>
+
+  <h2>{{ tiempoRestante }}</h2>
+
+  <button
+    [disabled]="!puedeCheckIn"
+  >
+    {{ puedeCheckIn
+      ? 'Realizar check-in'
+      : 'Check-in aún no disponible' }}
+  </button>
+</div>

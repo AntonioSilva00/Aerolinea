@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { ApiService } from '../../services/api.service';
-import { Vuelo } from '../../interfaces/aerolinea.models';
+import { Vuelo } from '../../models/aerolinea.models';
 
 import { addIcons } from 'ionicons';
 

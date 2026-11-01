@@ -78,36 +78,30 @@ export class LoginPage {
 
       console.log('[LOGIN] Iniciando solicitud al servidor');
 
-      const response = await this.apiService.login(
-        correo,
-        this.password
-      );
 
-      console.log('[LOGIN] Respuesta recibida:', response);
+const respuesta = await this.apiService.login(
+  this.email,
+  this.password
+);
 
-      if (response.success) {
+if (respuesta.success && respuesta.token) {
 
-        if (response.usuario) {
-          localStorage.setItem(
-            'usuario',
-            JSON.stringify(response.usuario)
-          );
-        }
+  localStorage.setItem(
+    'auth_token',
+    respuesta.token
+  );
 
-        await this.mostrarMensaje(
-          '¡Bienvenido!',
-          'success'
-        );
+  localStorage.setItem(
+    'usuario',
+    JSON.stringify(respuesta.usuario)
+  );
 
-        await this.router.navigate(['/reservas']);
+  await this.router.navigate(['/mis-vuelos']);
 
-      } else {
+} else {
+  console.error('No se pudo iniciar sesión');
+}
 
-        await this.mostrarMensaje(
-          response.message || 'Credenciales incorrectas'
-        );
-
-      }
 
     } catch (error: unknown) {
 
