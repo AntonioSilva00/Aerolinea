@@ -1,0 +1,8 @@
+Tu login.php actual DEBE emitir un token registrado en api_sesiones. Tras verificar la contrasena con password_verify y obtener $usuario['id']:
+$token = bin2hex(random_bytes(32));
+$hash = hash('sha256', $token);
+$stmt = $pdo->prepare('INSERT INTO api_sesiones (usuario_id,token_hash,expira_en) VALUES (?,?,DATE_ADD(NOW(),INTERVAL 7 DAY))');
+$stmt->execute([(int)$usuario['id'],$hash]);
+// Incluye 'token' => $token en tu respuesta JSON exitosa y guarda ese token en localStorage como auth_token.
+// NO reemplaces tu login.php completo sin revisar cómo autentica actualmente.
+// _bootstrap.php usa PDO con root sin clave SOLO para tu XAMPP local. Configura credenciales y HTTPS para producción.
