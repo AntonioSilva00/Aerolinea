@@ -1,0 +1,17 @@
+# Dependencias Node.js
+node_modules/
+**/node_modules/
+
+# Compilaciones
+dist/
+www/
+.angular/
+
+# Archivos locales
+.env
+.env.local
+*.log
+
+# Configuración del IDE
+.idea/
+android/local.properties
