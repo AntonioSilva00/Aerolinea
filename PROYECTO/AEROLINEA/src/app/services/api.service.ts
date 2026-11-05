@@ -3,7 +3,19 @@ import { Injectable } from '@angular/core';
 import axios, { AxiosInstance } from 'axios';
 import { Vuelo, Reserva } from '../models/aerolinea.models';
 import { Capacitor } from '@capacitor/core';
-
+export interface RegistroPasajero {
+  nombre: string;
+  apellido_paterno: string;
+  apellido_materno: string;
+  direccion: string;
+  fecha_nacimiento: string;
+  genero: string;
+  pais_origen: string;
+  telefono: string;
+  email: string;
+  password: string;
+  nip: string;
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -82,14 +94,14 @@ async realizarCheckin(reserva_pasajero_id: number): Promise<void> {
     return this.api.defaults.baseURL || '';
   }
 
-  async register(data: {
-    nombre: string;
-    email: string;
-    password: string;
-  }) {
-    const response = await this.api.post('register.php', data);
-    return response.data;
-  }
+async register(data: RegistroPasajero) {
+  const response = await this.api.post(
+    'auth/registro.php',
+    data
+  );
+
+  return response.data;
+}
 async login(email: string, password: string) {
   const response = await this.api.post('login.php', {
     email,
@@ -121,6 +133,13 @@ async login(email: string, password: string) {
 
     return response.data;
   }
+async verificarCorreo(token: string) {
+  const response = await this.api.post(
+    'auth/verificar_correo.php',
+    { token }
+  );
 
+  return response.data;
+}
   
 }

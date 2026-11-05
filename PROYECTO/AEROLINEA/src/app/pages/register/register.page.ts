@@ -1,71 +1,42 @@
-import { Component } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
-import { ApiService } from '../../services/api.service';
-import { 
-  ToastController, IonContent, IonCard, IonCardHeader, 
-  IonCardTitle, IonCardContent, IonItem, IonInput, IonButton, 
-  IonText, IonHeader, IonToolbar, IonTitle 
-} from '@ionic/angular';
+import { FormBuilder, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
-@Component({
-  selector: 'app-register',
-  templateUrl: './register.page.html',
-  styleUrls: ['./register.page.scss'],
-  standalone: true,
-  imports: [
-    CommonModule, FormsModule, RouterLink, IonContent, IonCard, 
-    IonCardHeader, IonCardTitle, IonCardContent, IonItem, 
-    IonInput, IonButton, IonText, IonHeader, IonToolbar, IonTitle
-  ]
-})
+function nipValido(control: AbstractControl): ValidationErrors | null {
+  const nip = String(control.value ?? '');
+  if (!/^\d{4}$/.test(nip)) return { nip: true };
+  const n = [...nip].map(Number);
+  const asc = n.every((x, i) => i === 0 || x === n[i-1] + 1);
+  const desc = n.every((x, i) => i === 0 || x === n[i-1] - 1);
+  return asc || desc || new Set(n).size === 1 ? { nip: true } : null;
+}
+@Component({selector:'app-register',standalone:true,imports:[CommonModule,ReactiveFormsModule,HttpClientModule],schemas:[CUSTOM_ELEMENTS_SCHEMA],templateUrl:'./register.page.html',styleUrls:['./register.page.scss']})
 export class RegisterPage {
-  nombre: string = '';
-  email: string = '';
-  password: string = '';
-  cargando: boolean = false;
-
-  constructor(
-    private apiService: ApiService,
-    private router: Router,
-    private toastCtrl: ToastController
-  ) {}
-
-  async onRegister() {
-    if (!this.nombre || !this.email || !this.password) {
-      this.mostrarMensaje('Completa todos los campos obligatorios', 'warning');
-      return;
-    }
-
-    this.cargando = true;
-    try {
-      const response = await this.apiService.register({
-        nombre: this.nombre,
-        email: this.email,
-        password: this.password
-      });
-
-      if (response.success) {
-        this.mostrarMensaje('Registro exitoso. Ahora puedes iniciar sesión.', 'success');
-        this.router.navigate(['/login']);
-      } else {
-        this.mostrarMensaje(response.message || 'Error al registrar', 'danger');
-      }
-    } catch (error) {
-      this.mostrarMensaje('Error de conexión con el servidor', 'danger');
-    } finally {
-      this.cargando = false;
-    }
-  }
-
-  async mostrarMensaje(mensaje: string, color: string) {
-    const toast = await this.toastCtrl.create({
-      message: mensaje,
-      duration: 3000,
-      position: 'bottom',
-      color: color
-    });
-    toast.present();
-  }
+ private fb=inject(FormBuilder); private http=inject(HttpClient);
+ // Ajustar a la IP LAN del servidor XAMPP, o integrar con ApiService existente.
+ apiUrl='http://192.168.1.5/api_aerolinea/auth/registro.php';
+ enviando=false; error=''; exito=''; mostrarPassword=false;
+ form=this.fb.nonNullable.group({
+  nombre:['',[Validators.required,Validators.maxLength(100)]],
+  apellido_paterno:['',[Validators.required,Validators.maxLength(100)]],
+  apellido_materno:['',[Validators.required,Validators.maxLength(100)]],
+  direccion:['',[Validators.required,Validators.maxLength(255)]],
+  nip:['',[Validators.required,nipValido]],
+  fecha_nacimiento:['',[Validators.required]],
+  genero:['',[Validators.required]],
+  pais_origen:['México',[Validators.required]],
+  correo:['',[Validators.required,Validators.email]],
+  telefono:['',[Validators.required,Validators.pattern(/^\+?\d{10,15}$/)]],
+  password:['',[Validators.required,Validators.minLength(12)]]
+ });
+ registrar() {
+  this.error='';this.exito='';
+  if(this.form.invalid){this.form.markAllAsTouched();this.error='Revisa los campos marcados.';return;}
+  this.enviando=true;
+  this.http.post<{ok:boolean;mensaje:string;correo_enviado:boolean}>(this.apiUrl,this.form.getRawValue()).subscribe({
+   next:r=>{this.enviando=false;this.exito=r.mensaje;this.form.reset();},
+   error:e=>{this.enviando=false;this.error=e.error?.error || 'No fue posible conectar con el servidor.';}
+  });
+ }
 }

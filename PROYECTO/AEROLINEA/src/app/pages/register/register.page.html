@@ -1,57 +1,44 @@
-<ion-content class="auth-bg ion-padding">
-  <div class="auth-container">
-    <ion-card class="auth-card">
-      <ion-card-header class="ion-text-center">
-        <ion-card-title color="primary">Crear Cuenta</ion-card-title>
-        <p>Únete a SkyFlow Airways</p>
-      </ion-card-header>
-
-      <ion-card-content>
-        <form (ngSubmit)="onRegister()">
-          <ion-item class="ion-margin-bottom" lines="full">
-            <ion-input 
-              type="text" 
-              label="Nombre Completo" 
-              labelPlacement="floating" 
-              [(ngModel)]="nombre" 
-              name="nombre" 
-              required>
-            </ion-input>
-          </ion-item>
-
-          <ion-item class="ion-margin-bottom" lines="full">
-            <ion-input 
-              type="email" 
-              label="Correo Electrónico" 
-              labelPlacement="floating" 
-              [(ngModel)]="email" 
-              name="email" 
-              required>
-            </ion-input>
-          </ion-item>
-
-          <ion-item class="ion-margin-bottom" lines="full">
-            <ion-input 
-              type="password" 
-              label="Contraseña" 
-              labelPlacement="floating" 
-              [(ngModel)]="password" 
-              name="password" 
-              required>
-            </ion-input>
-          </ion-item>
-
-          <ion-button expand="block" type="submit" [disabled]="cargando" class="ion-margin-top">
-            {{ cargando ? 'Registrando...' : 'Crear Cuenta' }}
-          </ion-button>
-        </form>
-
-        <div class="ion-text-center ion-margin-top">
-          <ion-text color="medium">
-            <p>¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a></p>
-          </ion-text>
+<ion-content [fullscreen]="true" class="register-screen">
+  <main class="layout">
+    <aside class="hero">
+      <div class="brand"><span class="brand-mark">✈</span> SKYFLOW <strong>AIRWAYS</strong></div>
+      <div class="hero-copy"><div class="eyebrow">TU PRÓXIMO DESTINO COMIENZA AQUÍ</div><h1>El mundo te<br><em>está esperando.</em></h1><p>Únete a SkyFlow Club y descubre una nueva forma de viajar.</p></div>
+      <div class="benefit"><span>✦</span><div><b>Bienvenido a Bronce</b><small>Tu primer nivel como socio SkyFlow</small></div></div>
+      <div class="hero-footer">SKYFLOW CLUB · VIAJA MÁS ALTO</div>
+    </aside>
+    <section class="form-panel">
+      <div class="topline"><span>SKYFLOW CLUB</span><span class="step">01 / 01 · CREA TU CUENTA</span></div>
+      <div class="form-heading"><div class="eyebrow">BIENVENIDO A BORDO</div><h2>Crea tu cuenta</h2><p>Completa tus datos para comenzar a disfrutar de tus beneficios.</p></div>
+      <div class="member"><div class="member-icon">✦</div><div><b>Socio Bronce</b><small>Tu membresía gratuita se activará al verificar tu correo.</small></div><span>GRATIS</span></div>
+      <form [formGroup]="form" (ngSubmit)="registrar()" novalidate>
+        <div class="section-title">01 <span>Información personal</span></div>
+        <div class="fields three">
+          <label>Nombre(s)<input formControlName="nombre" placeholder="Tu nombre" autocomplete="given-name"><small *ngIf="form.controls.nombre.touched && form.controls.nombre.invalid">Campo obligatorio</small></label>
+          <label>Apellido paterno<input formControlName="apellido_paterno" placeholder="Apellido paterno"></label>
+          <label>Apellido materno<input formControlName="apellido_materno" placeholder="Apellido materno"></label>
         </div>
-      </ion-card-content>
-    </ion-card>
-  </div>
+        <div class="fields two">
+          <label>Fecha de nacimiento<input type="date" formControlName="fecha_nacimiento" autocomplete="bday"></label>
+          <label>Género<select formControlName="genero"><option value="" disabled>Selecciona una opción</option><option value="Mujer">Mujer</option><option value="Hombre">Hombre</option><option value="No binario">No binario</option><option value="Prefiero no decir">Prefiero no decir</option><option value="Otro">Otro</option></select></label>
+        </div>
+        <div class="fields two">
+          <label>País de origen<input formControlName="pais_origen" placeholder="México" autocomplete="country-name"></label>
+          <label>Dirección<input formControlName="direccion" placeholder="Calle, número, ciudad" autocomplete="street-address"></label>
+        </div>
+        <div class="section-title">02 <span>Datos de contacto</span></div>
+        <div class="fields two">
+          <label>Correo electrónico<input type="email" formControlName="correo" placeholder="nombre@correo.com" autocomplete="email"></label>
+          <label>Teléfono<input type="tel" formControlName="telefono" placeholder="6181234567" autocomplete="tel"></label>
+        </div>
+        <div class="section-title">03 <span>Seguridad de tu cuenta</span></div>
+        <div class="fields two">
+          <label>Contraseña<div class="password-field"><input [type]="mostrarPassword ? 'text' : 'password'" formControlName="password" placeholder="Mínimo 12 caracteres" autocomplete="new-password"><button type="button" (click)="mostrarPassword=!mostrarPassword">{{mostrarPassword ? 'Ocultar' : 'Ver'}}</button></div></label>
+          <label>NIP de 4 dígitos<input type="password" inputmode="numeric" maxlength="4" formControlName="nip" placeholder="••••" autocomplete="off"><small>Evita 1234, 4321 y cuatro cifras iguales.</small></label>
+        </div>
+        <p class="feedback error" role="alert" *ngIf="error">{{error}}</p><p class="feedback success" role="status" *ngIf="exito">{{exito}}</p>
+        <button class="submit" type="submit" [disabled]="enviando">{{enviando ? 'Creando cuenta…' : 'Crear mi cuenta SkyFlow'}} <span>→</span></button>
+        <p class="legal">Al registrarte aceptas los términos del servicio y el aviso de privacidad de SkyFlow Airways.</p>
+      </form>
+    </section>
+  </main>
 </ion-content>

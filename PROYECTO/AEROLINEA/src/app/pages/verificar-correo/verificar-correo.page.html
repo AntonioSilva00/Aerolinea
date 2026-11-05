@@ -1,0 +1,52 @@
+
+<ion-content>
+  <div class="verification-container">
+    <div class="verification-card">
+
+      <div class="brand">
+        <ion-icon name="airplane-outline"></ion-icon>
+        <h1>SkyFlow Airways</h1>
+      </div>
+
+      <ng-container *ngIf="cargando">
+        <ion-spinner name="crescent"></ion-spinner>
+        <h2>Verificando tu correo...</h2>
+        <p>Estamos confirmando tu cuenta de SkyFlow Club.</p>
+      </ng-container>
+
+      <ng-container *ngIf="!cargando">
+
+        <div
+          class="status-icon"
+          [class.success]="verificado"
+          [class.error]="!verificado">
+
+          <ion-icon
+            [name]="verificado ? 'checkmark-circle' : 'alert-circle'">
+          </ion-icon>
+        </div>
+
+        <h2>
+          {{ verificado
+            ? '¡Correo verificado con éxito!'
+            : 'No se pudo verificar el correo' }}
+        </h2>
+
+        <p>{{ mensaje }}</p>
+
+        <div class="status-message" *ngIf="verificado">
+          <ion-icon name="shield-checkmark-outline"></ion-icon>
+          <span>Tu dirección de correo ha sido validada</span>
+        </div>
+
+        <ion-button
+          expand="block"
+          (click)="irAlLogin()">
+          Iniciar sesión
+        </ion-button>
+
+      </ng-container>
+
+    </div>
+  </div>
+</ion-content>
