@@ -19,6 +19,7 @@ import {
   refreshOutline,
   chevronForwardOutline,
   cloudOfflineOutline,
+  logOutOutline,
   checkmarkCircleOutline
 } from 'ionicons/icons';
 
@@ -54,6 +55,7 @@ export class MisVuelosPage implements OnInit, OnDestroy {
       airplaneOutline,
       pawOutline,
       personOutline,
+      logOutOutline,
       refreshOutline,
       chevronForwardOutline,
       cloudOfflineOutline,
@@ -203,7 +205,20 @@ disponible(v: Viaje): boolean {
       p.reserva_pasajero_id
     ]);
   }
+  // ========================================
+  // CERRAR SESIÓN
+  // ========================================
 
+  cerrarSesion(): void {
+
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('usuario');
+
+    void this.router.navigate(['/login']);
+  }
+  volver(): void {
+    void this.router.navigate(['/reservas']);
+  }
   trackByReserva(
     index: number,
     vuelo: Viaje

@@ -1,47 +1,156 @@
-<ion-content class="auth-bg ion-padding">
-  <div class="auth-container">
-    <ion-card class="auth-card">
-      <ion-card-header class="ion-text-center">
-  <ion-icon name="airplane" class="brand-icon"></ion-icon>
-  <ion-card-title>SkyFlow Airways</ion-card-title>
-  <p class="brand-subtitle">Inicia sesión para gestionar tus vuelos</p>
-</ion-card-header>
 
-      <ion-card-content>
-        <form (ngSubmit)="onLogin()">
-          <ion-item class="ion-margin-bottom" lines="full">
-            <ion-input 
-              type="email" 
-              label="Correo Electrónico" 
-              labelPlacement="floating" 
-              [(ngModel)]="email" 
-              name="email" 
-              required>
-            </ion-input>
-          </ion-item>
+<ion-content class="login-content" [fullscreen]="true">
+  <main class="login-layout">
 
-          <ion-item class="ion-margin-bottom" lines="full">
-            <ion-input 
-              type="password" 
-              label="Contraseña" 
-              labelPlacement="floating" 
-              [(ngModel)]="password" 
-              name="password" 
-              required>
-            </ion-input>
-          </ion-item>
+    <!-- Panel visual -->
+    <section class="hero-panel">
+      <div class="hero-glow hero-glow-one"></div>
+      <div class="hero-glow hero-glow-two"></div>
 
-          <ion-button expand="block" type="submit" [disabled]="cargando" class="ion-margin-top">
-            {{ cargando ? 'Verificando...' : 'Entrar' }}
-          </ion-button>
+      <div class="hero-inner">
+        <div class="hero-brand">
+          <ion-icon name="airplane"></ion-icon>
+          <span>SKYFLOW <strong>AIRWAYS</strong></span>
+        </div>
+
+        <div class="hero-copy">
+          <div class="eyebrow">
+            <span class="eyebrow-line"></span>
+            TU PRÓXIMO DESTINO COMIENZA AQUÍ
+          </div>
+
+          <h1>
+            El mundo está
+            <span>esperando por ti.</span>
+          </h1>
+
+          <p>
+            Descubre nuevos destinos, administra tus vuelos
+            y disfruta de una experiencia de viaje diseñada
+            para ti.
+          </p>
+
+          <div class="hero-features">
+            <div class="feature">
+              <ion-icon name="checkmark-circle-outline"></ion-icon>
+              Reservas más sencillas
+            </div>
+            <div class="feature">
+              <ion-icon name="checkmark-circle-outline"></ion-icon>
+              Tus viajes en un solo lugar
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-bottom">
+          <span>SKYFLOW CLUB</span>
+          <span>EXPLORA SIN LÍMITES</span>
+        </div>
+      </div>
+
+      <div class="orbit orbit-one"></div>
+      <div class="orbit orbit-two"></div>
+    </section>
+
+    <!-- Panel de autenticación -->
+    <section class="form-panel">
+      <div class="form-shell">
+
+        <div class="mobile-brand">
+          <ion-icon name="airplane"></ion-icon>
+          <span>SkyFlow Airways</span>
+        </div>
+
+        <div class="welcome-badge">
+          <span class="badge-dot"></span>
+          BIENVENIDO A BORDO
+        </div>
+
+        <h2>¡Qué gusto verte de nuevo!</h2>
+        <p class="form-description">
+          Ingresa tus datos para continuar tu próxima aventura.
+        </p>
+
+        <form (ngSubmit)="onLogin()" class="login-form">
+
+          <div class="field-group">
+            <label for="login-email">Correo electrónico</label>
+            <div class="input-shell">
+              <ion-icon name="mail-outline"></ion-icon>
+              <ion-input
+                id="login-email"
+                type="email"
+                inputmode="email"
+                autocomplete="email"
+                placeholder="tu@correo.com"
+                [(ngModel)]="email"
+                name="email"
+                required>
+              </ion-input>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="login-password">Contraseña</label>
+            <div class="input-shell">
+              <ion-icon name="lock-closed-outline"></ion-icon>
+              <ion-input
+                id="login-password"
+                [type]="mostrarPassword ? 'text' : 'password'"
+                autocomplete="current-password"
+                placeholder="Ingresa tu contraseña"
+                [(ngModel)]="password"
+                name="password"
+                required>
+              </ion-input>
+
+              <button
+                type="button"
+                class="visibility-button"
+                (click)="alternarPassword()"
+                [attr.aria-label]="mostrarPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'">
+                <ion-icon
+                  [name]="mostrarPassword ? 'eye-off-outline' : 'eye-outline'">
+                </ion-icon>
+              </button>
+            </div>
+          </div>
+
+          <button
+            class="login-submit"
+            type="submit"
+            [disabled]="cargando">
+
+            <ion-spinner
+              *ngIf="cargando"
+              name="crescent">
+            </ion-spinner>
+
+            <span>
+              {{ cargando ? 'Iniciando sesión...' : 'Iniciar sesión' }}
+            </span>
+
+            <ion-icon
+              *ngIf="!cargando"
+              name="arrow-forward-outline">
+            </ion-icon>
+          </button>
         </form>
 
-        <div class="ion-text-center ion-margin-top">
-          <ion-text color="medium">
-            <p>¿No tienes una cuenta? <a routerLink="/register">Regístrate aquí</a></p>
-          </ion-text>
+        <div class="register-section">
+          <p>
+            ¿Todavía no tienes una cuenta?
+            <a routerLink="/register">Crea tu cuenta</a>
+          </p>
         </div>
-      </ion-card-content>
-    </ion-card>
-  </div>
+
+        <div class="form-footer">
+          <ion-icon name="shield-checkmark-outline"></ion-icon>
+          Tu experiencia de viaje comienza de forma segura
+        </div>
+
+      </div>
+    </section>
+
+  </main>
 </ion-content>

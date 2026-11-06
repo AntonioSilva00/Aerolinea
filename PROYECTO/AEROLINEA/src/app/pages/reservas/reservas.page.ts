@@ -340,6 +340,9 @@ export class ReservasPage implements OnInit {
 
     void this.router.navigate(['/login']);
   }
+    MisVuelos(): void {
+    void this.router.navigate(['/mis-vuelos']);
+  }
 }
 export declare const expect: (actual: unknown) => any;
 
