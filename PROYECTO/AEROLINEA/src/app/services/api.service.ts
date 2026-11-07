@@ -120,6 +120,33 @@ async login(email: string, password: string) {
   return response.data;
 }
 
+
+async obtenerPerfil() {
+  const response = await this.api.get(
+    'auth/obtener_perfil.php'
+  );
+
+  return response.data;
+}
+
+async actualizarPerfil(data: {
+  nombre: string;
+  apellido_paterno: string;
+  apellido_materno: string;
+  telefono: string;
+  direccion: string;
+  fecha_nacimiento: string;
+  genero: string;
+  pais_origen: string;
+}) {
+  const response = await this.api.put(
+    'auth/actualizar_perfil.php',
+    data
+  );
+
+  return response.data;
+}
+
   async getVuelos(): Promise<Vuelo[]> {
     const response = await this.api.get('vuelos.php');
     return response.data;

@@ -1,0 +1,264 @@
+<ion-content [scrollY]="true" class="perfil-scroll">
+<div class="perfil-page">
+
+  <header class="topbar">
+    <button class="icon-btn" (click)="volver()" aria-label="Volver">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </button>
+
+    <div class="brand">
+      <ion-icon name="airplane-outline"></ion-icon>
+      <span>SKYFLOW <strong>AIRWAYS</strong></span>
+    </div>
+
+    <span class="topbar-label">MI CUENTA</span>
+  </header>
+  <main class="perfil-container">
+
+    <div class="page-heading">
+      <div>
+        <span class="eyebrow">TU ESPACIO PERSONAL</span>
+        <h1>Mi perfil<span>.</span></h1>
+        <p>Administra tu información y mantén tus datos actualizados.</p>
+      </div>
+
+      <button
+        *ngIf="!editando"
+        class="btn-primary"
+        (click)="activarEdicion()">
+        <ion-icon name="create-outline"></ion-icon>
+        Editar perfil
+      </button>
+    </div>
+
+    <div class="perfil-grid">
+
+      <aside class="identity-card">
+        <div class="identity-pattern"></div>
+
+        <div class="identity-content">
+          <div class="avatar">{{ iniciales }}</div>
+
+          <span class="member-tag">
+            <ion-icon name="shield-checkmark-outline"></ion-icon>
+            PASAJERO SKYFLOW
+          </span>
+
+          <h2>{{ nombreCompleto || 'Mi cuenta' }}</h2>
+          <p>{{ perfil.email || 'Sin correo registrado' }}</p>
+
+          <div class="identity-divider"></div>
+
+          <div class="identity-detail">
+            <ion-icon name="globe-outline"></ion-icon>
+            <span>{{ perfil.pais_origen || 'País no registrado' }}</span>
+          </div>
+
+          <div class="identity-detail">
+            <ion-icon name="person-outline"></ion-icon>
+            <span>Cuenta personal</span>
+          </div>
+        </div>
+      </aside>
+
+      <section class="information-panel">
+
+        <div class="panel-heading">
+          <div>
+            <span class="section-label">INFORMACIÓN PERSONAL</span>
+            <h2>Datos del pasajero</h2>
+          </div>
+
+          <span class="status" [class.editing]="editando">
+            {{ editando ? 'Editando' : 'Perfil' }}
+          </span>
+        </div>
+
+        <div
+          *ngIf="mensaje"
+          class="message"
+          [class.error]="tipoMensaje === 'error'"
+          role="status">
+          {{ mensaje }}
+        </div>
+
+        <form (ngSubmit)="guardarCambios()" #perfilForm="ngForm">
+
+          <div class="form-grid">
+
+            <div class="field">
+              <label for="nombre">Nombre *</label>
+              <input
+                id="nombre"
+                name="nombre"
+                [(ngModel)]="perfil.nombre"
+                [disabled]="!editando"
+                required
+                maxlength="100"
+                placeholder="Tu nombre"/>
+            </div>
+
+            <div class="field">
+              <label for="paterno">Apellido paterno *</label>
+              <input
+                id="paterno"
+                name="apellido_paterno"
+                [(ngModel)]="perfil.apellido_paterno"
+                [disabled]="!editando"
+                required
+                maxlength="100"/>
+            </div>
+
+            <div class="field">
+              <label for="materno">Apellido materno</label>
+              <input
+                id="materno"
+                name="apellido_materno"
+                [(ngModel)]="perfil.apellido_materno"
+                [disabled]="!editando"
+                maxlength="100"/>
+            </div>
+
+            <div class="field">
+              <label for="fecha">Fecha de nacimiento</label>
+              <input
+                id="fecha"
+                type="date"
+                name="fecha_nacimiento"
+                [(ngModel)]="perfil.fecha_nacimiento"
+                [disabled]="!editando"/>
+            </div>
+
+            <div class="field">
+              <label for="genero">Género</label>
+              <select
+                id="genero"
+                name="genero"
+                [(ngModel)]="perfil.genero"
+                [disabled]="!editando">
+                <option value="">No especificado</option>
+                <option value="Masculino">Masculino</option>
+                <option value="Femenino">Femenino</option>
+                <option value="Otro">Otro</option>
+                <option value="Prefiero no decirlo">Prefiero no decirlo</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="pais">País de origen</label>
+              <input
+                id="pais"
+                name="pais_origen"
+                [(ngModel)]="perfil.pais_origen"
+                [disabled]="!editando"
+                maxlength="100"/>
+            </div>
+
+          </div>
+
+          <div class="section-divider"></div>
+
+          <div class="panel-heading">
+            <div>
+              <span class="section-label">CONTACTO</span>
+              <h2>Información de contacto</h2>
+            </div>
+          </div>
+
+          <div class="form-grid">
+
+            <div class="field">
+              <label for="email">Correo electrónico</label>
+              <div class="input-icon">
+                <ion-icon name="mail-outline"></ion-icon>
+                <input
+                  id="email"
+                  type="email"
+                  name="email"
+                  [(ngModel)]="perfil.email"
+                  disabled/>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="telefono">Teléfono</label>
+              <div class="input-icon">
+                <ion-icon name="call-outline"></ion-icon>
+                <input
+                  id="telefono"
+                  type="tel"
+                  name="telefono"
+                  [(ngModel)]="perfil.telefono"
+                  [disabled]="!editando"
+                  maxlength="10"
+                  inputmode="numeric"
+                  placeholder="10 dígitos"/>
+              </div>
+            </div>
+
+            <div class="field full-width">
+              <label for="direccion">Dirección</label>
+              <div class="input-icon">
+                <ion-icon name="location-outline"></ion-icon>
+                <input
+                  id="direccion"
+                  name="direccion"
+                  [(ngModel)]="perfil.direccion"
+                  [disabled]="!editando"
+                  maxlength="255"
+                  placeholder="Dirección de residencia"/>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="form-actions" *ngIf="editando">
+            <button
+              type="button"
+              class="btn-secondary"
+              [disabled]="guardando"
+              (click)="cancelarEdicion()">
+              <ion-icon name="close-outline"></ion-icon>
+              Cancelar
+            </button>
+
+            <button
+              type="submit"
+              class="btn-primary"
+              [disabled]="guardando || perfilForm.invalid">
+              <ion-icon name="checkmark-outline"></ion-icon>
+              {{ guardando ? 'Guardando...' : 'Guardar cambios' }}
+            </button>
+          </div>
+
+        </form>
+      </section>
+
+      <section class="security-card">
+        <div class="security-icon">
+          <ion-icon name="shield-checkmark-outline"></ion-icon>
+        </div>
+
+        <div>
+          <h3>Seguridad de tu cuenta</h3>
+          <p>
+            Protege tu información personal y mantén
+            tus credenciales seguras.
+          </p>
+          <span class="security-note">
+            La recuperación de contraseña se gestiona
+            mediante el proceso de verificación de correo.
+          </span>
+        </div>
+      </section>
+
+      <button class="logout-mobile" (click)="cerrarSesion()">
+        <ion-icon name="log-out-outline"></ion-icon>
+        Cerrar sesión
+      </button>
+
+    </div>
+
+  </main>
+</div>
+</ion-content>

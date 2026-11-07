@@ -38,6 +38,12 @@ export const routes: Routes = [
         .then((m) => m.RegisterPage),
   },
   {
+  path: 'perfil',
+  loadComponent: () =>
+    import('./pages/perfil/perfil.page')
+      .then(m => m.PerfilPage)
+},
+  {
     path: 'verificar-correo',
     loadComponent: () =>
       import('./pages/verificar-correo/verificar-correo.page')
