@@ -1,253 +1,84 @@
-
-<ion-header class="ion-no-border">
+<ion-header class="ion-no-border sky-header">
   <ion-toolbar class="topbar">
-    <div class="brand" slot="start">
-      <span class="brand-icon">
-        <ion-icon name="airplane"></ion-icon>
-      </span>
-      <div class="brand-text">
-        <strong>SkyFlow</strong>
-        <small>AIRWAYS</small>
-      </div>
+    <div class="nav-shell">
+      <a class="brand" href="/reservas" (click)="$event.preventDefault(); irInicio()" aria-label="SkyFlow, inicio">
+        <span class="brand-icon"><ion-icon name="airplane"></ion-icon></span>
+        <span class="brand-text"><strong>SkyFlow</strong><small>AIRWAYS</small></span>
+      </a>
+      <nav class="desktop-nav" aria-label="Navegación principal">
+        <button class="nav-link active" type="button" (click)="irInicio()"><ion-icon name="compass-outline"></ion-icon> Explorar vuelos</button>
+        <button class="nav-link" type="button" (click)="MisVuelos()"><ion-icon name="ticket-outline"></ion-icon> Mis vuelos</button>
+        <button class="nav-link" type="button" (click)="irPerfil()"><ion-icon name="person-circle-outline"></ion-icon> Mi perfil</button>
+      </nav>
+      <button class="nav-logout" type="button" (click)="cerrarSesion()" aria-label="Cerrar sesión" title="Cerrar sesión"><ion-icon name="log-out-outline"></ion-icon><span>Salir</span></button>
     </div>
-<ion-button routerLink="/mis-vuelos" (click)="MisVuelos()" fill="clear" slot="start">
-  <ion-icon name="airplane-outline" slot="start"></ion-icon>
-  Mis vuelos
-</ion-button>
-    <ion-buttons slot="end">
-      <ion-button class="logout-btn" (click)="cerrarSesion()">
-        <ion-icon name="log-out-outline" slot="icon-only">
-          
-        </ion-icon>
-      </ion-button>
-    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="flights-content">
-
-  <!-- HERO -->
-  <section class="hero">
+  <section class="hero" aria-label="Destinos SkyFlow">
+    <div class="hero-slides" aria-hidden="true">
+      <div *ngFor="let destino of destinos; let i = index" class="hero-slide" [class.is-active]="slideActual === i" [style.background-image]="'url(' + destino.imagen + ')' "></div>
+    </div>
+    <div class="hero-overlay"></div>
     <div class="hero-inner">
-      <div class="hero-tag">
-        <ion-icon name="airplane-outline"></ion-icon>
-        EXPLORA EL MUNDO
+      <div class="hero-copy" aria-live="off">
+        <div class="hero-tag"><ion-icon name="airplane-outline"></ion-icon> {{ destinos[slideActual].etiqueta }}</div>
+        <h1>{{ destinos[slideActual].titulo }}<br><span>{{ destinos[slideActual].destacado }}</span></h1>
+        <p>{{ destinos[slideActual].descripcion }}</p>
       </div>
-
-      <h1>Tu próximo destino<br><span>comienza aquí.</span></h1>
-
-      <p>
-        Encuentra el vuelo ideal y prepárate para tu próxima aventura.
-      </p>
-
-      <!-- BUSCADOR -->
-      <div class="search-box">
-        <ion-icon name="search-outline"></ion-icon>
-
-        <input
-          type="text"
-          [(ngModel)]="busqueda"
-          placeholder="Buscar ciudad de origen o destino..."
-          aria-label="Buscar vuelos por ciudad"
-        />
-
-        <button
-          *ngIf="busqueda"
-          type="button"
-          class="clear-search"
-          (click)="busqueda = ''"
-          aria-label="Limpiar búsqueda"
-        >
-          <ion-icon name="close-outline"></ion-icon>
-        </button>
+      <div class="hero-controls" aria-label="Controles del carrusel">
+        <button type="button" (click)="cambiarSlide(-1)" aria-label="Destino anterior"><ion-icon name="chevron-back-outline"></ion-icon></button>
+        <button type="button" *ngFor="let destino of destinos; let i = index" class="slide-dot" [class.selected]="slideActual === i" [attr.aria-label]="'Mostrar destino ' + (i + 1)" [attr.aria-pressed]="slideActual === i" (click)="seleccionarSlide(i)"></button>
+        <button type="button" (click)="cambiarSlide(1)" aria-label="Destino siguiente"><ion-icon name="chevron-forward-outline"></ion-icon></button>
+      </div>
+      <div class="search-panel">
+        <div class="search-panel-title"><ion-icon name="search-outline"></ion-icon><div><strong>Encuentra tu próximo vuelo</strong><small>Busca entre nuestras rutas disponibles</small></div></div>
+        <div class="search-box">
+          <ion-icon name="search-outline"></ion-icon>
+          <input type="search" [(ngModel)]="busqueda" placeholder="Buscar ciudad de origen o destino..." aria-label="Buscar vuelos por ciudad" />
+          <button *ngIf="busqueda" type="button" class="clear-search" (click)="busqueda = ''" aria-label="Limpiar búsqueda"><ion-icon name="close-outline"></ion-icon></button>
+        </div>
+        <button type="button" class="search-action" (click)="cargarVuelos()" [disabled]="cargando"><ion-icon name="refresh-outline"></ion-icon><span>Actualizar</span></button>
       </div>
     </div>
   </section>
 
-  <main class="flights-container">
-
-    <!-- ENCABEZADO DE RESULTADOS -->
+  <main class="flights-container" id="resultados-vuelos">
     <div class="results-heading">
-      <div>
-        <span class="eyebrow">DESCUBRE TU RUTA</span>
-        <h2>Vuelos disponibles</h2>
-        <p>Explora las opciones para tu siguiente viaje.</p>
-      </div>
-
-      <div class="results-actions">
-        <span class="results-count">
-          {{ vuelosFiltrados.length }}
-          {{ vuelosFiltrados.length === 1 ? 'vuelo' : 'vuelos' }}
-        </span>
-
-        <button
-          type="button"
-          class="refresh-button"
-          (click)="cargarVuelos()"
-          [disabled]="cargando"
-          aria-label="Actualizar vuelos"
-        >
-          <ion-icon name="refresh-outline"></ion-icon>
-        </button>
-      </div>
+      <div><span class="eyebrow">DESCUBRE TU RUTA</span><h2>Vuelos disponibles</h2><p>Explora las opciones para tu siguiente viaje.</p></div>
+      <div class="results-actions"><span class="results-count">{{ vuelosFiltrados.length }} {{ vuelosFiltrados.length === 1 ? 'vuelo' : 'vuelos' }}</span><button type="button" class="refresh-button" (click)="cargarVuelos()" [disabled]="cargando" aria-label="Actualizar vuelos"><ion-icon name="refresh-outline"></ion-icon></button></div>
     </div>
+    <div class="state-box" *ngIf="cargando"><ion-spinner name="crescent"></ion-spinner><h3>Buscando los mejores vuelos</h3><p>Estamos consultando los destinos disponibles.</p></div>
+    <div class="state-box" *ngIf="!cargando && vuelosFiltrados.length === 0"><div class="empty-icon"><ion-icon name="search-outline"></ion-icon></div><h3>No encontramos vuelos</h3><p>Prueba con otra ciudad o actualiza los resultados.</p><ion-button fill="outline" (click)="busqueda = ''; cargarVuelos()">Ver todos los vuelos</ion-button></div>
 
-    <!-- CARGANDO -->
-    <div class="state-box" *ngIf="cargando">
-      <ion-spinner name="crescent"></ion-spinner>
-      <h3>Buscando los mejores vuelos</h3>
-      <p>Estamos consultando los destinos disponibles.</p>
-    </div>
-
-    <!-- SIN RESULTADOS -->
-    <div
-      class="state-box"
-      *ngIf="!cargando && vuelosFiltrados.length === 0"
-    >
-      <div class="empty-icon">
-        <ion-icon name="search-outline"></ion-icon>
-      </div>
-
-      <h3>No encontramos vuelos</h3>
-      <p>
-        Prueba con otra ciudad o actualiza los resultados.
-      </p>
-
-      <ion-button
-        fill="outline"
-        (click)="busqueda = ''; cargarVuelos()"
-      >
-        Ver todos los vuelos
-      </ion-button>
-    </div>
-
-    <!-- TARJETAS -->
-    <div
-      class="flights-grid"
-      *ngIf="!cargando && vuelosFiltrados.length > 0"
-    >
-      <article
-        class="flight-card"
-        *ngFor="let vuelo of vuelosFiltrados; trackBy: trackByVuelo"
-      >
+    <div class="flights-grid" *ngIf="!cargando && vuelosFiltrados.length > 0">
+      <article class="flight-card" *ngFor="let vuelo of vuelosFiltrados; trackBy: trackByVuelo">
         <div class="card-top">
-          <div class="flight-number">
-            <span class="flight-symbol">
-              <ion-icon name="airplane-outline"></ion-icon>
-            </span>
-            <div>
-              <small>SKYFLOW AIRWAYS</small>
-              <strong>Vuelo SF-{{ vuelo.id }}</strong>
-            </div>
-          </div>
-
-          <span
-            class="status-pill"
-            [class.status-cancelled]="vuelo.estado === 'cancelado'"
-            [class.status-finished]="vuelo.estado === 'finalizado'"
-          >
-            <span class="status-dot"></span>
-            {{ vuelo.estado === 'disponible' ? 'Disponible' :
-               vuelo.estado === 'cancelado' ? 'Cancelado' : 'Finalizado' }}
-          </span>
+          <div class="flight-number"><span class="flight-symbol"><ion-icon name="airplane-outline"></ion-icon></span><div><small>SKYFLOW AIRWAYS</small><strong>Vuelo SF-{{ vuelo.id }}</strong></div></div>
+          <span class="status-pill" [class.status-cancelled]="vuelo.estado === 'cancelado'" [class.status-finished]="vuelo.estado === 'finalizado'"><span class="status-dot"></span>{{ vuelo.estado === 'disponible' ? 'Disponible' : vuelo.estado === 'cancelado' ? 'Cancelado' : 'Finalizado' }}</span>
         </div>
-
-        <!-- RUTA -->
         <div class="flight-route">
-          <div class="city city-origin">
-            <span class="city-label">ORIGEN</span>
-            <h3>{{ vuelo.origen }}</h3>
-            <small>Salida</small>
-          </div>
-
-          <div class="route-middle">
-            <ion-icon name="airplane"></ion-icon>
-            <div class="route-line">
-              <span></span>
-              <div class="dash"></div>
-              <span></span>
-            </div>
-            <small>Vuelo</small>
-          </div>
-
-          <div class="city city-destination">
-            <span class="city-label">DESTINO</span>
-            <h3>{{ vuelo.destino }}</h3>
-            <small>Llegada</small>
-          </div>
+          <div class="city city-origin"><span class="city-label">ORIGEN</span><h3>{{ vuelo.origen }}</h3><small>Salida</small></div>
+          <div class="route-middle"><ion-icon name="airplane"></ion-icon><div class="route-line"><span></span><div class="dash"></div><span></span></div><small>Vuelo</small></div>
+          <div class="city city-destination"><span class="city-label">DESTINO</span><h3>{{ vuelo.destino }}</h3><small>Llegada</small></div>
         </div>
-
-        <!-- DETALLES -->
         <div class="flight-details">
-          <div class="detail-item">
-            <span class="detail-icon">
-              <ion-icon name="calendar-outline"></ion-icon>
-            </span>
-            <div>
-              <small>Fecha de salida</small>
-              <strong>
-                {{ formatearFecha(vuelo.fecha_salida) | date:'dd MMM yyyy' }}
-              </strong>
-              <span>
-                {{ formatearFecha(vuelo.fecha_salida) | date:'HH:mm' }} h
-              </span>
-            </div>
-          </div>
-
-          <div class="detail-item">
-            <span class="detail-icon">
-              <ion-icon name="calendar-outline"></ion-icon>
-            </span>
-            <div>
-              <small>Fecha de llegada</small>
-              <strong>
-                {{ formatearFecha(vuelo.fecha_llegada) | date:'dd MMM yyyy' }}
-              </strong>
-              <span>
-                {{ formatearFecha(vuelo.fecha_llegada) | date:'HH:mm' }} h
-              </span>
-            </div>
-          </div>
+          <div class="detail-item"><span class="detail-icon"><ion-icon name="calendar-outline"></ion-icon></span><div><small>Fecha de salida</small><strong>{{ formatearFecha(vuelo.fecha_salida) | date:'dd MMM yyyy' }}</strong><span>{{ formatearFecha(vuelo.fecha_salida) | date:'HH:mm' }} h</span></div></div>
+          <div class="detail-item"><span class="detail-icon"><ion-icon name="calendar-outline"></ion-icon></span><div><small>Fecha de llegada</small><strong>{{ formatearFecha(vuelo.fecha_llegada) | date:'dd MMM yyyy' }}</strong><span>{{ formatearFecha(vuelo.fecha_llegada) | date:'HH:mm' }} h</span></div></div>
         </div>
-
-        <!-- PRECIO -->
-        <div class="card-bottom">
-          <div class="price-block">
-            <small>Precio por persona</small>
-            <div class="price">
-              {{ vuelo.precio | currency:'MXN':'symbol':'1.2-2' }}
-              <span>MXN</span>
-            </div>
-            <span class="capacity">
-              <ion-icon name="people-outline"></ion-icon>
-              Capacidad: {{ vuelo.capacidad }}
-            </span>
-          </div>
-
-          <ion-button
-            class="book-button"
-            (click)="reservar(vuelo.id)"
-            [disabled]="
-              reservando ||
-              vuelo.estado !== 'disponible' ||
-              vuelo.capacidad <= 0
-            "
-          >
-            <ion-spinner
-              *ngIf="vueloReservando === vuelo.id"
-              name="crescent"
-            ></ion-spinner>
-
-            <ng-container *ngIf="vueloReservando !== vuelo.id">
-              Reservar
-              <ion-icon
-                name="arrow-forward-outline"
-                slot="end"
-              ></ion-icon>
-            </ng-container>
-          </ion-button>
+        <div class="card-bottom"><div class="price-block"><small>Precio por persona</small><div class="price">{{ vuelo.precio | currency:'MXN':'symbol':'1.2-2' }} <span>MXN</span></div><span class="capacity"><ion-icon name="people-outline"></ion-icon> Capacidad: {{ vuelo.capacidad }}</span></div>
+          <ion-button class="book-button" (click)="reservar(vuelo.id)" [disabled]="reservando || vuelo.estado !== 'disponible' || vuelo.capacidad <= 0"><ion-spinner *ngIf="vueloReservando === vuelo.id" name="crescent"></ion-spinner><ng-container *ngIf="vueloReservando !== vuelo.id">Reservar<ion-icon name="arrow-forward-outline" slot="end"></ion-icon></ng-container></ion-button>
         </div>
       </article>
     </div>
   </main>
+  <footer class="sky-footer">© SkyFlow Airways · Tu próxima aventura comienza aquí</footer>
 </ion-content>
+
+<nav class="mobile-bottom-nav" aria-label="Navegación móvil">
+  <button class="active" type="button" (click)="irInicio()" aria-current="page"><ion-icon name="compass-outline"></ion-icon><span>Explorar</span></button>
+  <button type="button" (click)="MisVuelos()"><ion-icon name="ticket-outline"></ion-icon><span>Mis vuelos</span></button>
+  <button type="button" (click)="irPerfil()"><ion-icon name="person-circle-outline"></ion-icon><span>Perfil</span></button>
+  <button type="button" (click)="cerrarSesion()"><ion-icon name="log-out-outline"></ion-icon><span>Salir</span></button>
+</nav>

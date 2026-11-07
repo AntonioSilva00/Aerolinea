@@ -70,18 +70,76 @@
           </div>
 
           <!-- Mascota animada -->
-          <div class="pet-animation">
-            <div class="flight-trail"></div>
+    
+<!-- Escena animada de SkyFlow -->
+<div
+  class="pet-animation"
+  [class.has-pet]="(viaje.mascotas?.length ?? 0) > 0"
+  aria-hidden="true"
+>
+  <div class="pet-cloud cloud-one"></div>
+  <div class="pet-cloud cloud-two"></div>
+  <div class="pet-cloud cloud-three"></div>
 
-            <div class="traveling-pet">
-              <span class="pet-emoji">🐶</span>
-              <span class="pet-shadow"></span>
-            </div>
+  <div class="flight-trail"></div>
 
-            <span class="trail-star star-one">✦</span>
-            <span class="trail-star star-two">✦</span>
-            <span class="trail-star star-three">✦</span>
-          </div>
+  <span class="trail-star star-one">✦</span>
+  <span class="trail-star star-two">✦</span>
+  <span class="trail-star star-three">✦</span>
+
+  <!-- Mascota: solo en reservas con mascota -->
+  <div
+    class="pet-traveler"
+    *ngIf="viaje.mascotas?.length"
+  >
+    <div class="pet-dog">
+      <div class="dog-tail"></div>
+
+      <div class="dog-ear ear-left"></div>
+      <div class="dog-ear ear-right"></div>
+
+      <div class="dog-head">
+        <div class="dog-patch"></div>
+
+        <span class="dog-eye eye-left"></span>
+        <span class="dog-eye eye-right"></span>
+
+        <div class="dog-muzzle">
+          <span class="dog-nose"></span>
+          <span class="dog-mouth"></span>
+        </div>
+
+        <span class="dog-cheek cheek-left"></span>
+        <span class="dog-cheek cheek-right"></span>
+      </div>
+
+      <div class="dog-body">
+        <span class="dog-paw paw-left"></span>
+        <span class="dog-paw paw-right"></span>
+      </div>
+
+      <div class="dog-scarf"></div>
+    </div>
+
+    <div class="pet-suitcase">
+      <span class="suitcase-handle"></span>
+      <span class="suitcase-stripe"></span>
+      <span class="suitcase-wheel wheel-left"></span>
+      <span class="suitcase-wheel wheel-right"></span>
+    </div>
+  </div>
+
+  <!-- Vuelo sin mascota -->
+  <div
+    class="solo-airplane"
+    *ngIf="!viaje.mascotas?.length"
+  >
+    <ion-icon name="airplane-outline"></ion-icon>
+  </div>
+
+  <div class="pet-ground"></div>
+</div>
+
 
           <!-- Ruta -->
           <div class="ticket-route">

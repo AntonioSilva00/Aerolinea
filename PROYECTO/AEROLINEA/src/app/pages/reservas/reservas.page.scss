@@ -748,3 +748,88 @@
     height: 40px;
   }
 }
+
+/* ===== REDISEÑO SKYFLOW / NAVEGACIÓN Y HERO ===== */
+:host { --sky-navy: #0e274b; }
+.sky-header { position: relative; z-index: 30; }
+.topbar {
+  --background: rgba(9, 29, 60, .94);
+  --min-height: 68px;
+  --padding-start: 0;
+  --padding-end: 0;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+.nav-shell { max-width: 1280px; padding: 0 24px; margin: auto; min-height: 68px; display: flex; align-items: center; gap: 32px; }
+.nav-shell .brand { text-decoration: none; flex-shrink: 0; margin: 0; }
+.desktop-nav { display: flex; align-items: center; justify-content: center; flex: 1; gap: 8px; }
+.nav-link, .nav-logout { border: 0; background: transparent; color: rgba(255,255,255,.84); font: inherit; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 11px 15px; border-radius: 12px; transition: background .2s ease, color .2s ease; font-weight: 650; font-size: 13px; }
+.nav-link ion-icon, .nav-logout ion-icon { font-size: 19px; }
+.nav-link:hover, .nav-link.active, .nav-logout:hover { background: rgba(255,255,255,.12); color: white; }
+.nav-logout { margin-left: auto; background: rgba(255,255,255,.08); }
+.hero { min-height: 480px; padding: 70px 22px 104px; background: #0c3263; }
+.hero::before, .hero::after { display: none; }
+.hero-slides, .hero-overlay { position: absolute; inset: 0; pointer-events: none; }
+.hero-slide { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0; transform: scale(1.055); transition: opacity 1.2s ease, transform 7s ease; }
+.hero-slide.is-active { opacity: 1; transform: scale(1); }
+.hero-overlay { background: linear-gradient(90deg, rgba(7,25,53,.9) 0%, rgba(7,29,61,.7) 45%, rgba(8,37,80,.35) 100%), linear-gradient(0deg, rgba(8,30,61,.5), transparent 60%); }
+.hero-inner { max-width: 1190px; }
+.hero-copy { max-width: 780px; min-height: 240px; animation: skyReveal .55s ease both; }
+.hero-inner h1 { font-size: clamp(32px, 4.8vw, 62px); max-width: 780px; letter-spacing: -1.9px; }
+.hero-inner h1 span { color: #8ce4ff; }
+.hero-inner > p, .hero-copy > p { color: #e0edff; font-size: 16px; max-width: 540px; line-height: 1.65; }
+.hero-controls { display: flex; align-items: center; gap: 10px; margin: 4px 0 24px; }
+.hero-controls button { width: 32px; height: 32px; display: grid; place-items: center; background: rgba(255,255,255,.13); color: white; border: 1px solid rgba(255,255,255,.2); border-radius: 50%; cursor: pointer; }
+.hero-controls .slide-dot { width: 9px; height: 9px; border: 0; padding: 0; background: rgba(255,255,255,.5); transition: width .25s ease, background .25s ease; }
+.hero-controls .slide-dot.selected { width: 26px; border-radius: 10px; background: #73e3f4; }
+.search-panel { display: flex; align-items: center; gap: 16px; padding: 16px; max-width: 1000px; border-radius: 20px; background: rgba(255,255,255,.97); box-shadow: 0 20px 50px rgba(3,18,40,.22); }
+.search-panel-title { display: flex; align-items: center; gap: 10px; flex: 0 0 230px; color: #102b58; }
+.search-panel-title > ion-icon { color: #2563eb; font-size: 23px; }
+.search-panel-title strong, .search-panel-title small { display: block; }
+.search-panel-title strong { font-size: 13px; }
+.search-panel-title small { font-size: 11px; color: #7a8ba5; margin-top: 4px; }
+.search-panel .search-box { flex: 1; max-width: none; min-width: 0; min-height: 48px; border: 1px solid #e3ebf5; background: #f5f8fd; box-shadow: none; border-radius: 12px; }
+.search-box:focus-within { outline: 2px solid rgba(37,99,235,.35); }
+.search-action { display: flex; align-items: center; gap: 7px; border: 0; border-radius: 12px; background: #2563eb; color: white; min-height: 48px; padding: 0 19px; font-weight: 750; cursor: pointer; }
+.search-action:disabled { opacity: .6; cursor: wait; }
+.flights-container { margin: -52px auto 0; }
+.results-heading { border: 1px solid rgba(222,231,244,.85); }
+.flight-card { transition: transform .25s ease, box-shadow .25s ease; }
+.flight-card:hover { transform: translateY(-5px); }
+.book-button { --border-radius: 13px; }
+.sky-footer { text-align: center; padding: 24px 16px 40px; color: #8799af; font-size: 12px; }
+.mobile-bottom-nav { display: none; }
+@keyframes skyReveal { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 900px) {
+  .nav-shell { gap: 12px; }
+  .nav-link { padding: 10px; font-size: 12px; }
+  .search-panel { flex-wrap: wrap; }
+  .search-panel-title { flex-basis: 100%; }
+}
+@media (max-width: 700px) {
+  .sky-header { display: none; }
+  .hero { min-height: 440px; padding: 54px 16px 100px; }
+  .hero-inner h1 { font-size: clamp(30px, 8vw, 42px); }
+  .hero-copy { min-height: 230px; }
+  .hero-copy > p { font-size: 14px; }
+  .search-panel { padding: 12px; gap: 10px; }
+  .search-panel-title { flex-basis: 100%; }
+  .search-panel .search-box { flex-basis: 100%; }
+  .search-action { width: 100%; justify-content: center; }
+  .flights-container { margin-top: -52px; padding-bottom: 30px; }
+  .results-heading { flex-wrap: wrap; }
+  .mobile-bottom-nav { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); position: fixed; z-index: 100; bottom: 0; left: 0; right: 0; padding: 8px 8px calc(8px + env(safe-area-inset-bottom)); background: rgba(10,34,69,.98); box-shadow: 0 -8px 28px rgba(4,21,44,.17); }
+  .mobile-bottom-nav button { border: 0; border-radius: 12px; padding: 8px 3px; background: transparent; color: #c2d4ed; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10px; font-weight: 700; cursor: pointer; }
+  .mobile-bottom-nav button ion-icon { font-size: 23px; }
+  .mobile-bottom-nav button.active { background: rgba(91,171,255,.18); color: #8beaff; }
+  .sky-footer { padding-bottom: 110px; }
+}
+@media (max-width: 380px) {
+  .hero { padding-top: 40px; }
+  .flight-details { grid-template-columns: 1fr; }
+  .card-bottom { flex-wrap: wrap; }
+  .book-button { flex: 1 1 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-slide, .hero-copy, .flight-card { animation: none !important; transition: none !important; }
+}

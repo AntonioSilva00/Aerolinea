@@ -20,6 +20,7 @@ import {
   chevronForwardOutline,
   cloudOfflineOutline,
   logOutOutline,
+  arrowBackOutline,
   checkmarkCircleOutline
 } from 'ionicons/icons';
 
@@ -56,6 +57,7 @@ export class MisVuelosPage implements OnInit, OnDestroy {
       pawOutline,
       personOutline,
       logOutOutline,
+      arrowBackOutline,
       refreshOutline,
       chevronForwardOutline,
       cloudOfflineOutline,

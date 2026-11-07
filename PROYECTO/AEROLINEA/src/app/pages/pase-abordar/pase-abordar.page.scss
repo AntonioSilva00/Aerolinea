@@ -152,12 +152,529 @@
 
 .pet-emoji {
   display: block;
-  font-size: 57px;
+  font-size: 35px;
   text-align: center;
   animation: petBounce .8s ease-in-out infinite alternate;
   filter: drop-shadow(0 8px 9px rgba(0,0,0,.16));
 }
 
+/* ==========================================
+   SKYFLOW — ESCENA ANIMADA DEL PASE
+   ========================================== */
+
+.pet-animation {
+  position: relative;
+  height: 200px;
+  margin: 14px 0 18px;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: 18px;
+  background:
+    radial-gradient(
+      ellipse at 50% 100%,
+      rgba(94, 201, 236, 0.16),
+      transparent 65%
+    ),
+    linear-gradient(
+      160deg,
+      rgba(255, 255, 255, 0.055),
+      rgba(255, 255, 255, 0.01)
+    );
+}
+
+/* Nubes */
+
+.pet-cloud {
+  position: absolute;
+  width: 82px;
+  height: 23px;
+  background: rgba(199, 232, 255, 0.13);
+  border-radius: 50px;
+  animation: cloudDrift 12s ease-in-out infinite alternate;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    background: inherit;
+    border-radius: 50%;
+  }
+
+  &::before {
+    width: 39px;
+    height: 35px;
+    bottom: 5px;
+    left: 15px;
+  }
+
+  &::after {
+    width: 29px;
+    height: 27px;
+    bottom: 4px;
+    left: 43px;
+  }
+}
+
+.cloud-one {
+  left: 8%;
+  top: 37px;
+}
+
+.cloud-two {
+  right: 10%;
+  top: 77px;
+  transform: scale(0.72);
+  animation-delay: -5s;
+}
+
+.cloud-three {
+  right: 23%;
+  top: 17px;
+  transform: scale(0.5);
+  animation-delay: -8s;
+}
+
+/* Ruta */
+
+.flight-trail {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  top: 127px;
+  height: 45px;
+  border-top: 2px dashed rgba(143, 222, 255, 0.38);
+  border-radius: 50%;
+  transform: rotate(-5deg);
+}
+
+/* Estrellas */
+
+.trail-star {
+  position: absolute;
+  z-index: 1;
+  color: #9fe8ff;
+  font-size: 15px;
+  animation: skyTwinkle 2.4s ease-in-out infinite;
+}
+
+.star-one {
+  left: 19%;
+  top: 30px;
+}
+
+.star-two {
+  right: 19%;
+  top: 53px;
+  animation-delay: 0.8s;
+}
+
+.star-three {
+  left: 12%;
+  top: 112px;
+  animation-delay: 1.5s;
+}
+
+/* Mascota flotando */
+
+.pet-traveler {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  top: 12px;
+  width: 165px;
+  height: 170px;
+  transform: translateX(-50%);
+  animation: skyPetFloat 3s ease-in-out infinite;
+}
+
+/* Perrito */
+
+.pet-dog {
+  position: absolute;
+  left: 28px;
+  top: 10px;
+  width: 108px;
+  height: 145px;
+}
+
+.dog-head {
+  position: absolute;
+  z-index: 4;
+  left: 10px;
+  top: 7px;
+  width: 90px;
+  height: 84px;
+  background: #f3d4a5;
+  border: 3px solid #e6b984;
+  border-radius: 46% 46% 44% 44%;
+}
+
+.dog-ear {
+  position: absolute;
+  z-index: 2;
+  top: 9px;
+  width: 32px;
+  height: 59px;
+  background: #9c5d3e;
+  border-radius: 55% 45% 70% 65%;
+  transform-origin: top center;
+  animation: dogEarMove 3s ease-in-out infinite;
+}
+
+.ear-left {
+  left: 0;
+  transform: rotate(19deg);
+}
+
+.ear-right {
+  right: 0;
+  transform: rotate(-19deg);
+  animation-delay: -1.5s;
+}
+
+.dog-patch {
+  position: absolute;
+  left: 5px;
+  top: 4px;
+  width: 37px;
+  height: 40px;
+  background: #bd825a;
+  border-radius: 55% 35% 50% 45%;
+  transform: rotate(-15deg);
+}
+
+.dog-eye {
+  position: absolute;
+  z-index: 5;
+  top: 37px;
+  width: 9px;
+  height: 11px;
+  background: #2e2930;
+  border-radius: 50%;
+  animation: dogBlink 5s infinite;
+}
+
+.eye-left {
+  left: 24px;
+}
+
+.eye-right {
+  right: 24px;
+}
+
+.dog-muzzle {
+  position: absolute;
+  z-index: 5;
+  left: 25px;
+  top: 48px;
+  width: 40px;
+  height: 30px;
+  background: #fff0d9;
+  border-radius: 45%;
+}
+
+.dog-nose {
+  position: absolute;
+  left: 15px;
+  top: 4px;
+  width: 12px;
+  height: 9px;
+  background: #29242b;
+  border-radius: 50% 50% 60% 60%;
+}
+
+.dog-mouth {
+  position: absolute;
+  left: 18px;
+  top: 13px;
+  width: 7px;
+  height: 8px;
+  border-bottom: 2px solid #775b53;
+  border-radius: 50%;
+}
+
+.dog-cheek {
+  position: absolute;
+  top: 53px;
+  width: 12px;
+  height: 6px;
+  background: #efaaa1;
+  border-radius: 50%;
+  opacity: 0.7;
+}
+
+.cheek-left {
+  left: 8px;
+}
+
+.cheek-right {
+  right: 8px;
+}
+
+.dog-body {
+  position: absolute;
+  z-index: 2;
+  top: 83px;
+  left: 25px;
+  width: 62px;
+  height: 57px;
+  background: #f1d0a0;
+  border: 3px solid #e6b984;
+  border-radius: 28px 28px 18px 18px;
+}
+
+.dog-paw {
+  position: absolute;
+  bottom: -6px;
+  width: 22px;
+  height: 17px;
+  background: #f8dfb8;
+  border: 2px solid #e6b984;
+  border-radius: 10px;
+}
+
+.paw-left {
+  left: 3px;
+}
+
+.paw-right {
+  right: 3px;
+}
+
+.dog-scarf {
+  position: absolute;
+  z-index: 5;
+  top: 84px;
+  left: 27px;
+  width: 58px;
+  height: 13px;
+  background: #3dbdd1;
+  border-radius: 6px;
+
+  &::after {
+    content: "";
+    position: absolute;
+    right: 3px;
+    top: 7px;
+    width: 12px;
+    height: 29px;
+    background: #25a9c0;
+    border-radius: 4px;
+    transform: rotate(-17deg);
+  }
+}
+
+.dog-tail {
+  position: absolute;
+  z-index: 1;
+  top: 104px;
+  right: -1px;
+  width: 32px;
+  height: 12px;
+  background: #c38b61;
+  border-radius: 15px;
+  transform-origin: left center;
+  animation: dogTailWag 0.55s ease-in-out infinite alternate;
+}
+
+/* Maleta */
+
+.pet-suitcase {
+  position: absolute;
+  z-index: 4;
+  left: 122px;
+  top: 122px;
+  width: 35px;
+  height: 44px;
+  background: #3c9fdd;
+  border: 3px solid #86d8f7;
+  border-radius: 8px;
+  transform: rotate(9deg);
+}
+
+.suitcase-handle {
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  border: 3px solid #86d8f7;
+  border-bottom: 0;
+  border-radius: 6px 6px 0 0;
+  top: -15px;
+  left: 8px;
+}
+
+.suitcase-stripe {
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  left: 9px;
+  border-left: 2px solid rgba(134, 216, 247, 0.5);
+}
+
+.suitcase-wheel {
+  position: absolute;
+  bottom: -8px;
+  width: 7px;
+  height: 8px;
+  background: #203750;
+  border-radius: 3px;
+}
+
+.wheel-left {
+  left: 3px;
+}
+
+.wheel-right {
+  right: 3px;
+}
+
+/* Sombra */
+
+.pet-ground {
+  position: absolute;
+  z-index: 1;
+  bottom: 15px;
+  left: 50%;
+  width: 160px;
+  height: 12px;
+  background: rgba(2, 13, 32, 0.4);
+  filter: blur(8px);
+  border-radius: 50%;
+  transform: translateX(-50%);
+  animation: petShadowPulse 3s ease-in-out infinite;
+}
+
+/* Avión cuando no hay mascota */
+
+.solo-airplane {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  top: 50%;
+  color: #b9efff;
+  transform: translate(-50%, -50%);
+  animation: airplaneFloat 3s ease-in-out infinite;
+
+  ion-icon {
+    font-size: 62px;
+    filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.15));
+  }
+}
+
+/* Animaciones */
+
+@keyframes skyPetFloat {
+  0%, 100% {
+    transform: translate(-50%, 0) rotate(-2deg);
+  }
+
+  50% {
+    transform: translate(-50%, -10px) rotate(2deg);
+  }
+}
+
+@keyframes dogTailWag {
+  from { transform: rotate(-20deg); }
+  to { transform: rotate(25deg); }
+}
+
+@keyframes dogEarMove {
+  0%, 100% { rotate: 0deg; }
+  50% { rotate: 5deg; }
+}
+
+@keyframes dogBlink {
+  0%, 43%, 47%, 100% {
+    transform: scaleY(1);
+  }
+
+  45% {
+    transform: scaleY(0.12);
+  }
+}
+
+@keyframes cloudDrift {
+  from { translate: -12px 0; }
+  to { translate: 12px 0; }
+}
+
+@keyframes skyTwinkle {
+  0%, 100% {
+    opacity: 0.25;
+    transform: scale(0.7);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.25);
+  }
+}
+
+@keyframes petShadowPulse {
+  0%, 100% {
+    transform: translateX(-50%) scale(1);
+    opacity: 0.45;
+  }
+
+  50% {
+    transform: translateX(-50%) scale(0.8);
+    opacity: 0.25;
+  }
+}
+
+@keyframes airplaneFloat {
+  0%, 100% {
+    transform: translate(-50%, -50%) rotate(-8deg);
+  }
+
+  50% {
+    transform: translate(-50%, -60%) rotate(6deg);
+  }
+}
+
+/* Pantallas pequeñas */
+
+@media (max-width: 380px) {
+  .pet-animation {
+    height: 180px;
+  }
+
+  .pet-traveler {
+    transform-origin: center top;
+    scale: 0.88;
+  }
+}
+
+/* Accesibilidad */
+
+@media (prefers-reduced-motion: reduce) {
+  .pet-animation *,
+  .pet-animation *::before,
+  .pet-animation *::after {
+    animation: none !important;
+  }
+}
+.boarding-ticket {
+  animation: ticketReveal 550ms ease-out both;
+}
+
+@keyframes ticketReveal {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .boarding-ticket {
+    animation: none;
+  }
+}
 .pet-shadow {
   display: block;
   width: 34px;

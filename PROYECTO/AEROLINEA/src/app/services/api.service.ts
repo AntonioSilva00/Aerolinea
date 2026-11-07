@@ -70,7 +70,7 @@ async realizarCheckin(reserva_pasajero_id: number): Promise<void> {
     }
 
     // Dirección inicial mientras se configura el servidor.
-    return 'http://192.168.1.9/api_aerolinea/';
+    return 'http://192.168.1.5/api_aerolinea/';
   }
 
   configurarServidor(direccion: string): void {

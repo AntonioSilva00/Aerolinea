@@ -62,8 +62,11 @@ export class SQLiteService {
 
       }
 
-      await this.db.open();
+const estado = await this.db.isDBOpen();
 
+if (!estado.result) {
+  await this.db.open();
+}
       await this.db.execute(`
         CREATE TABLE IF NOT EXISTS usuarios (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
